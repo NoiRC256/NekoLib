@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NekoSystems
+namespace Nep
 {
     /// <summary>
     /// Service locator for game modules.

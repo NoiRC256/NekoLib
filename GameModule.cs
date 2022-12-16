@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NekoSystems
+namespace Nep
 {
     public class GameModule : MonoBehaviour
     {

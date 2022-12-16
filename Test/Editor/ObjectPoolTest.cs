@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using NekoSystems.Pool;
+using Nep.Pool;
 using UnityEngine;
 
-namespace NekoSystems.Test
+namespace Nep.Test
 {
     public class ObjectPoolTest
     {

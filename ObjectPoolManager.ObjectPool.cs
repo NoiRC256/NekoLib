@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using NekoSystems.Pool;
+using Nep.Pool;
 
-namespace NekoSystems
+namespace Nep
 {
     public sealed partial class ObjectPoolManager : IObjectPoolManager
     {

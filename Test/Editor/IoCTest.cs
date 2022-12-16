@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace NekoSystems.Test
+namespace Nep.Test
 {
     public class IoCTest
     {
