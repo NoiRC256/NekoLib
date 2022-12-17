@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Nep.UI
 {
-    public abstract class UIControllerContextBase
+    public abstract class PanelControllerBase : MonoBehaviour
     {
 
     }
