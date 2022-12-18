@@ -1,8 +1,7 @@
 using NUnit.Framework;
-using Nep.Pool;
 using UnityEngine;
 
-namespace Nep.Test
+namespace Nep.Pool.Test
 {
     public class ObjectPoolTest
     {

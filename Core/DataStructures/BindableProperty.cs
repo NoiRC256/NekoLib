@@ -4,11 +4,11 @@ using UnityEngine;
 namespace Nep.DataStructures
 {
     /// <summary>
-    /// Data class that holds a value and invokes events when the value is changed
+    /// Data class that holds a value and exposes events for value change.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [System.Serializable]
-    public class BindableProperty<T> : IBindableProperty<T> where T : IEquatable<T>
+    public class BindableProperty<T> : IBindableProperty<T> where T : struct
     {
         public virtual T Value {
             get => _value;
