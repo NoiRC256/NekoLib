@@ -1,6 +1,6 @@
 namespace Nep.UI
 {
-    public interface IPanelController : IScreenController
+    public interface IPanelController : IController
     {
         PanelPriority PanelPriority { get; }
     }

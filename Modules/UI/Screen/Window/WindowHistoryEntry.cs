@@ -7,12 +7,12 @@ namespace Nep.UI
     public class WindowHistoryEntry
     {
         public readonly IWindowController Controller;
-        public readonly IWindowProperties Properties;
+        public readonly IWindowModel Properties;
 
-        public WindowHistoryEntry(IWindowController controller, IWindowProperties windowProperties)
+        public WindowHistoryEntry(IWindowController windowController, IWindowModel windowModel)
         {
-            Controller = controller;
-            Properties = windowProperties;
+            Controller = windowController;
+            Properties = windowModel;
         }
 
         public void Show()

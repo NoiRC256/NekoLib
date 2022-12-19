@@ -13,7 +13,7 @@ namespace Nep.UI
 
         private Queue<WindowHistoryEntry> _windowQueue;
         private Stack<WindowHistoryEntry> _windowHistory;
-        private HashSet<IScreenController> _transitioningScreens;
+        private HashSet<IController> _transitioningScreens;
 
         public event Action RequestScreenBlock;
         public event Action RequestScreenUnblock;
@@ -23,13 +23,13 @@ namespace Nep.UI
         public override void Init()
         {
             base.Init();
-            _screens = new Dictionary<string, IWindowController>();
+            _controllers = new Dictionary<string, IWindowController>();
             _windowQueue = new Queue<WindowHistoryEntry>();
             _windowHistory = new Stack<WindowHistoryEntry>();
-            _transitioningScreens = new HashSet<IScreenController>();
+            _transitioningScreens = new HashSet<IController>();
         }
 
-        public override void ReparentScreen(IScreenController controller, Transform screenTr)
+        public override void ReparentScreen(IController controller, Transform screenTr)
         {
             IWindowController window = controller as IWindowController;
 
@@ -66,17 +66,17 @@ namespace Nep.UI
             controller.CloseRequest -= OnCloseRequestedByWindow;
         }
 
-        private void OnCloseRequestedByWindow(IScreenController screen)
+        private void OnCloseRequestedByWindow(IController screen)
         {
             HideScreen(screen as IWindowController);
         }
 
-        private void OnTransitionInFinished(IScreenController screen)
+        private void OnTransitionInFinished(IController screen)
         {
             RemoveTransition(screen);
         }
 
-        private void OnTransitionOutFinished(IScreenController screen)
+        private void OnTransitionOutFinished(IController screen)
         {
             RemoveTransition(screen);
             var window = screen as IWindowController;
@@ -95,7 +95,7 @@ namespace Nep.UI
 
         public override void ShowScreen<TProperties>(IWindowController controller, TProperties properties)
         {
-            IWindowProperties windowProperties = (IWindowProperties)properties;
+            IWindowModel windowProperties = (IWindowModel)properties;
             if (ShouldEnqueue(controller, windowProperties))
             {
                 EnqueueWindow(controller, properties);
@@ -131,10 +131,10 @@ namespace Nep.UI
 
         private void EnqueueWindow<TProperties>(IWindowController controller, TProperties properties)
         {
-            _windowQueue.Enqueue(new WindowHistoryEntry(controller, (IWindowProperties)properties));
+            _windowQueue.Enqueue(new WindowHistoryEntry(controller, (IWindowModel)properties));
         }
 
-        private bool ShouldEnqueue(IWindowController controller, IWindowProperties windowProperties)
+        private bool ShouldEnqueue(IWindowController controller, IWindowModel windowProperties)
         {
             if (CurrentWindow == null && _windowQueue.Count == 0)
             {
@@ -169,7 +169,7 @@ namespace Nep.UI
             }
         }
 
-        private void DoShow(IWindowController controller, IWindowProperties windowProperties)
+        private void DoShow(IWindowController controller, IWindowModel windowProperties)
         {
             DoShow(new WindowHistoryEntry(controller, windowProperties));
         }
@@ -208,7 +208,7 @@ namespace Nep.UI
         #endregion
 
         #region Transition
-        private void AddTransition(IScreenController screen)
+        private void AddTransition(IController screen)
         {
             _transitioningScreens.Add(screen);
             if (RequestScreenBlock != null)
@@ -217,7 +217,7 @@ namespace Nep.UI
             }
         }
 
-        private void RemoveTransition(IScreenController screen)
+        private void RemoveTransition(IController screen)
         {
             _transitioningScreens.Remove(screen);
             if (!IsScreenTransitioning)

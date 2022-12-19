@@ -1,6 +1,6 @@
 namespace Nep.UI
 {
-    public interface IWindowController : IScreenController
+    public interface IWindowController : IController
     {
         WindowPriority WindowPriority { get; }
         bool HideOnForegroundLost { get; }

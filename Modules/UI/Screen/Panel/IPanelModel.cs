@@ -1,6 +1,6 @@
 namespace Nep.UI
 {
-    public interface IPanelProperties : IScreenProperties
+    public interface IPanelModel : IModel
     {
         PanelPriority Priority { get; set; }
     }

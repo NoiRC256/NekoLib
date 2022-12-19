@@ -3,21 +3,21 @@ using UnityEngine;
 
 namespace Nep.UI
 {
-    public class ScreenControllerBase<TProperties> : MonoBehaviour, IScreenController where TProperties : IScreenProperties
+    public class ControllerBase<TModel> : MonoBehaviour, IController where TModel : IModel
     {
         public string ScreenId { get; set; }
         public bool IsVisible { get; set; }
-        public Action<IScreenController> TransitionInFinished { get; set; }
-        public Action<IScreenController> TransitionOutFinished { get; set; }
-        public Action<IScreenController> CloseRequest { get; set; }
-        public Action<IScreenController> ScreenDestroyed { get; set; }
+        public Action<IController> TransitionInFinished { get; set; }
+        public Action<IController> TransitionOutFinished { get; set; }
+        public Action<IController> CloseRequest { get; set; }
+        public Action<IController> ScreenDestroyed { get; set; }
         public TransitionBase AnimIn { get => _animIn; set => _animIn = value; }
         public TransitionBase AnimOut { get => _animOut; set => _animOut = value; }
-        protected TProperties Properties { get => _properties; set => _properties = value; }
+        protected TModel Properties { get => _model; set => _model = value; }
 
         private TransitionBase _animIn;
         private TransitionBase _animOut;
-        private TProperties _properties;
+        private TModel _model;
 
         #region MonoBehaviour
         protected virtual void Awake()
@@ -37,11 +37,11 @@ namespace Nep.UI
         #endregion
 
         #region Show and Hide
-        public void Show(IScreenProperties properties = null)
+        public void Show(IModel model = null)
         {
-            if (properties != null)
+            if (model != null)
             {
-                if (properties is TProperties) SetProperties((TProperties)properties);
+                if (model is TModel) SetProperties((TModel)model);
             }
             HierarchyFixOnShow();
             OnPropertiesSet();
@@ -70,7 +70,7 @@ namespace Nep.UI
                 {
                     this.gameObject.SetActive(true);
                 }
-                transition.Animate(this.transform, onComplete);
+                transition.PlayAnimation(this.transform, onComplete);
             }
         }
 
@@ -88,9 +88,9 @@ namespace Nep.UI
         }
         #endregion
 
-        protected virtual void SetProperties(TProperties properties)
+        protected virtual void SetProperties(TModel model)
         {
-            _properties = properties;
+            _model = model;
         }
 
         protected virtual void OnPropertiesSet()

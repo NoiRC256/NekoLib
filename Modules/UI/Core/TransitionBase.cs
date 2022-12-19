@@ -7,6 +7,6 @@ namespace Nep.UI
 {
     public abstract class TransitionBase : MonoBehaviour
     {
-        public abstract void Animate(Transform tr, Action onComplete);
+        public abstract void PlayAnimation(Transform tr, Action onComplete);
     }
 }
