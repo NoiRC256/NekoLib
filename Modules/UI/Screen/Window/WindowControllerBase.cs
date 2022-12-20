@@ -1,36 +1,34 @@
 namespace Nep.UI
 {
-    public abstract class WindowControllerBase : WindowControllerBase<WindowModel> { }
+    public abstract class WindowControllerBase : WindowControllerBase<WindowContextBase> { }
 
-    public abstract class WindowControllerBase<TModel> : ControllerBase<WindowModel>, IWindowController
-        where TModel : IWindowModel
+    public abstract class WindowControllerBase<TContext> : UIControllerBase<WindowContextBase>, IWindowController
+        where TContext : IWindowContext
     {
-        public WindowPriority WindowPriority => Properties.WindowPriority;
-
-        public bool HideOnForegroundLost => Properties.HideOnForegroundLost;
-
-        public bool IsPopup => Properties.IsPopup;
+        public WindowPriority WindowPriority => Context.WindowPriority;
+        public bool HideOnForegroundLost => Context.HideOnForegroundLost;
+        public bool IsPopup => Context.IsPopup;
 
         public virtual void UIClose()
         {
             CloseRequest(this);
         }
 
-        protected sealed override void SetProperties(WindowModel windowModel)
+        protected sealed override void SetContext(WindowContextBase windowContext)
         {
-            if(windowModel != null)
+            if(windowContext != null)
             {
-                if (!windowModel.SuppressPrefabProperties)
+                if (!windowContext.SuppressPrefabContext)
                 {
-                    windowModel.WindowPriority = Properties.WindowPriority;
-                    windowModel.HideOnForegroundLost = Properties.HideOnForegroundLost;
-                    windowModel.IsPopup = Properties.IsPopup;
+                    windowContext.WindowPriority = Context.WindowPriority;
+                    windowContext.HideOnForegroundLost = Context.HideOnForegroundLost;
+                    windowContext.IsPopup = Context.IsPopup;
                 }
-                Properties = windowModel;
+                Context = windowContext;
             }
         }
 
-        protected override void HierarchyFixOnShow()
+        protected override void ChangeHierarchy()
         {
             transform.SetAsLastSibling();
         }

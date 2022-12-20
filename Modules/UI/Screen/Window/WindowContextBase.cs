@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Nep.UI
 {
     [System.Serializable]
-    public class WindowModel : IWindowModel
+    public class WindowContextBase : IWindowContext
     {
         [SerializeField] protected WindowPriority _windowPriority = WindowPriority.ForceForeground;
         [SerializeField] protected bool _hideOnForegroundLost = true;
@@ -21,27 +21,27 @@ namespace Nep.UI
             get => _isPopup;
             set => _isPopup = value;
         }
-        public bool SuppressPrefabProperties { get; set; }
+        public bool SuppressPrefabContext { get; set; }
 
-        public WindowModel()
+        public WindowContextBase()
         {
             _windowPriority = WindowPriority.ForceForeground;
             _hideOnForegroundLost = true;
             _isPopup = false;
         }
 
-        public WindowModel(bool suppressPrefabProperties = false)
+        public WindowContextBase(bool suppressPrefabContext = false)
         {
             _windowPriority = WindowPriority.ForceForeground;
             _hideOnForegroundLost = false;
-            SuppressPrefabProperties = suppressPrefabProperties;
+            SuppressPrefabContext = suppressPrefabContext;
         }
 
-        public WindowModel(WindowPriority windowPriority, bool hideOnForegroundLost = false, bool suppressPrefabProperties = false)
+        public WindowContextBase(WindowPriority windowPriority, bool hideOnForegroundLost = false, bool suppressPrefabContext = false)
         {
             _windowPriority = windowPriority;
             _hideOnForegroundLost = hideOnForegroundLost;
-            SuppressPrefabProperties = suppressPrefabProperties;
+            SuppressPrefabContext = suppressPrefabContext;
         }
     }
 }

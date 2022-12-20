@@ -8,7 +8,7 @@ namespace Nep.UI
     /// Base class for UI layer. A UI layer maintains screens registered to it.
     /// </summary>
     /// <typeparam name="TController">Type of UI screen controller interface</typeparam>
-    public abstract class UILayerBase<TController> : MonoBehaviour where TController : IController
+    public abstract class UILayerBase<TController> : MonoBehaviour where TController : IUIController
     {
         protected Dictionary<string, TController> _controllers;
 
@@ -17,7 +17,7 @@ namespace Nep.UI
             _controllers = new Dictionary<string, TController>();
         }
 
-        public virtual void ReparentScreen(IController controller, Transform screenTr)
+        public virtual void ReparentScreen(IUIController controller, Transform screenTr)
         {
             screenTr.SetParent(transform, false);
         }
@@ -47,7 +47,7 @@ namespace Nep.UI
 
         }
 
-        private void OnScreenDestroyed(IController controller)
+        private void OnScreenDestroyed(IUIController controller)
         {
             if (!string.IsNullOrEmpty(controller.ScreenId) && _controllers.ContainsKey(controller.ScreenId))
             {
@@ -59,7 +59,7 @@ namespace Nep.UI
         #region Show and Hide
         public abstract void ShowScreen(TController controller);
 
-        public abstract void ShowScreen<TModel>(TController controller, TModel properties) where TModel : IModel;
+        public abstract void ShowScreen<TContext>(TController controller, TContext context) where TContext : IUIControllerContext;
 
         public abstract void HideScreen(TController controller);
 
@@ -76,7 +76,7 @@ namespace Nep.UI
             if (_controllers.TryGetValue(id, out TController controller)) ShowScreen(controller);
         }
 
-        public void ShowScreenById<TProperties>(string id, TProperties properties) where TProperties : IModel
+        public void ShowScreenById<TProperties>(string id, TProperties properties) where TProperties : IUIControllerContext
         {
             if (_controllers.TryGetValue(id, out TController controller)) ShowScreen(controller, properties);
         }
