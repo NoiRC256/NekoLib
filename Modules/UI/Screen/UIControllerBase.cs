@@ -3,21 +3,22 @@ using UnityEngine;
 
 namespace Nep.UI
 {
-    public class ControllerBase<TModel> : MonoBehaviour, IController where TModel : IModel
+    public class UIControllerBase<TContext> : MonoBehaviour, IUIController where TContext : IUIControllerContext
     {
         public string ScreenId { get; set; }
         public bool IsVisible { get; set; }
-        public Action<IController> TransitionInFinished { get; set; }
-        public Action<IController> TransitionOutFinished { get; set; }
-        public Action<IController> CloseRequest { get; set; }
-        public Action<IController> ScreenDestroyed { get; set; }
+        protected TContext Context { get => _context; set => _context = value; }
         public TransitionBase AnimIn { get => _animIn; set => _animIn = value; }
         public TransitionBase AnimOut { get => _animOut; set => _animOut = value; }
-        protected TModel Properties { get => _model; set => _model = value; }
 
+        public Action<IUIController> TransitionInFinished { get; set; }
+        public Action<IUIController> TransitionOutFinished { get; set; }
+        public Action<IUIController> CloseRequest { get; set; }
+        public Action<IUIController> ScreenDestroyed { get; set; }
+
+        private TContext _context;
         private TransitionBase _animIn;
         private TransitionBase _animOut;
-        private TModel _model;
 
         #region MonoBehaviour
         protected virtual void Awake()
@@ -37,22 +38,42 @@ namespace Nep.UI
         #endregion
 
         #region Show and Hide
-        public void Show(IModel model = null)
+        public void Show(IUIControllerContext context = null)
         {
-            if (model != null)
+            if (context != null)
             {
-                if (model is TModel) SetProperties((TModel)model);
+                if (context is TContext) SetContext((TContext)context);
             }
-            HierarchyFixOnShow();
-            OnPropertiesSet();
+            ChangeHierarchy();
+            OnContextSet();
             if (!this.gameObject.activeSelf) DoTransition(_animIn, OnAnimInComplete, true);
             else TransitionInFinished?.Invoke(this);
+        }
+
+        protected virtual void SetContext(TContext context)
+        {
+            _context = context;
+        }
+
+        protected virtual void ChangeHierarchy()
+        {
+
+        }
+
+        protected virtual void OnContextSet()
+        {
+
         }
 
         public void Hide(bool animate = true)
         {
             DoTransition(animate ? _animOut : null, OnAnimOutComplete, false);
             WhileHiding();
+        }
+
+        protected virtual void WhileHiding()
+        {
+
         }
         #endregion
 
@@ -87,26 +108,6 @@ namespace Nep.UI
             TransitionOutFinished?.Invoke(this);
         }
         #endregion
-
-        protected virtual void SetProperties(TModel model)
-        {
-            _model = model;
-        }
-
-        protected virtual void OnPropertiesSet()
-        {
-
-        }
-
-        protected virtual void HierarchyFixOnShow()
-        {
-
-        }
-
-        protected virtual void WhileHiding()
-        {
-
-        }
 
         protected virtual void AddListeners()
         {

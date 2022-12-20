@@ -1,10 +1,10 @@
 namespace Nep.UI
 {
-    public interface IWindowModel : IModel
+    public interface IWindowContext : IUIControllerContext
     {
         WindowPriority WindowPriority { get; set; }
         bool HideOnForegroundLost { get; set; }
         bool IsPopup { get; set; }
-        bool SuppressPrefabProperties { get; set; }
+        bool SuppressPrefabContext { get; set; }
     }
 }
