@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Nep
+namespace Nap
 {
     public abstract class MonoSingleton : MonoBehaviour
     {

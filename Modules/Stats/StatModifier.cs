@@ -1,4 +1,4 @@
-namespace Nep.Stats
+namespace Nap.Stats
 {
     /// <summary>
     /// Data class that represents a value modifier for stats.

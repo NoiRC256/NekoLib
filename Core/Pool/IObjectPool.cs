@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Nep.Pool
+namespace Nap.Pool
 {
     public interface IObjectPool<T>
     {

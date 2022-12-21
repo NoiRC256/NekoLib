@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Nep.Pool.Test
+namespace Nap.Pool.Test
 {
     public class ObjectPoolTest
     {

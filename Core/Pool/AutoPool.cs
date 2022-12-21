@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Nep.Pool
+namespace Nap.Pool
 {
     /// <summary>
     /// Generic object pool where behaviour of pooled objects can be defined by delegates.

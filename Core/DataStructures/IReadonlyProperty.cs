@@ -1,4 +1,4 @@
-namespace Nep.DataStructures
+namespace Nap.DataStructures
 {
     /// <summary>
     /// Interface for a readonly property wrapper.

@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Nep.DataStructures;
+using Nap.DataStructures;
 
-namespace Nep.Stats
+namespace Nap.Stats
 {
     /// <summary>
     /// Data class that represents a modifiable stat.
     /// Manages a collection of value modifiers, and provides relevant events.
     /// </summary>
     [System.Serializable]
-    public class Stat : IStat, Nep.DataStructures.IBindableProperty<float>
+    public class Stat : IStat, Nap.DataStructures.IBindableProperty<float>
     {
         /// <summary>
         /// Final value of the stat.

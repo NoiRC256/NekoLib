@@ -1,4 +1,4 @@
-namespace Nep.Stats
+namespace Nap.Stats
 {
     /// <summary>
     /// Interface for value modifier for stats.

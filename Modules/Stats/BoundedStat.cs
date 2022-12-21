@@ -1,7 +1,7 @@
 using UnityEngine;
-using Nep.DataStructures;
+using Nap.DataStructures;
 
-namespace Nep.Stats
+namespace Nap.Stats
 {
     /// <summary>
     /// Data class that represents a modifiable stat.

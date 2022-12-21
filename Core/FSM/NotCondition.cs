@@ -1,4 +1,4 @@
-﻿namespace Nep.FSM
+﻿namespace Nap.FSM
 {
     public class NotCondition<T> : FSMCondition<T>
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Nep.Pool;
+using Nap.Pool;
 
-namespace Nep
+namespace Nap
 {
     public sealed partial class ObjectPoolManager : MonoBehaviour, IObjectPoolManager
     {
@@ -31,7 +31,7 @@ namespace Nep
         public ObjectPoolBase RegisterPool(Type type)
         {
             if (!typeof(IPoolable).IsAssignableFrom(type))
-                throw new GameFrameworkException(String.Format("Object type '{0}' is invalid", type.FullName));
+                throw new Exception(String.Format("Object type '{0}' is invalid", type.FullName));
 
             Type poolType = typeof(ReferencePool<>).MakeGenericType(type);
             ObjectPoolBase pool = (ObjectPoolBase)Activator.CreateInstance(poolType);
@@ -42,7 +42,7 @@ namespace Nep
         public IObjectPool<T> RegisterPool<T>(T obj) where T : Component, IPoolable
         {
             if (obj == null) 
-                throw new GameFrameworkException("Object is invalid.");
+                throw new Exception("Object is invalid.");
 
             ComponentPool<T> pool = new ComponentPool<T>(obj);
             _componentPools.Add(obj, pool);
@@ -52,10 +52,10 @@ namespace Nep
         public ObjectPoolBase RegisterPool(Component obj)
         {
             if (obj == null) 
-                throw new GameFrameworkException("Object is invalid.");
+                throw new Exception("Object is invalid.");
             Type type = obj.GetType();
             if (!typeof(IPoolable).IsAssignableFrom(type))
-                throw new GameFrameworkException(String.Format("Object type '{0}' is invalid", type.FullName));
+                throw new Exception(String.Format("Object type '{0}' is invalid", type.FullName));
 
             Type poolType = typeof(ComponentPool<>).MakeGenericType(type);
             ObjectPoolBase pool = (ObjectPoolBase)Activator.CreateInstance(poolType);
@@ -72,7 +72,7 @@ namespace Nep
         public ObjectPoolBase GetPool(Type type)
         {
             if (!typeof(IPoolable).IsAssignableFrom(type))
-                throw new GameFrameworkException(String.Format("Object type '{0}' is invalid", type.FullName));
+                throw new Exception(String.Format("Object type '{0}' is invalid", type.FullName));
 
             if (HasPool(type)) return _referencePools[type];
             else return RegisterPool(type);
@@ -81,7 +81,7 @@ namespace Nep
         public IObjectPool<T> GetPool<T>(T obj) where T : Component, IPoolable
         {
             if (obj == null) 
-                throw new GameFrameworkException("Object is invalid.");
+                throw new Exception("Object is invalid.");
             if (HasPool<T>(obj)) return (IObjectPool<T>)_componentPools[obj];
             else return RegisterPool<T>(obj);
         }
@@ -89,9 +89,9 @@ namespace Nep
         public ObjectPoolBase GetPool(Component obj)
         {
             if (obj == null) 
-                throw new GameFrameworkException("Object is invalid.");
+                throw new Exception("Object is invalid.");
             if (!typeof(IPoolable).IsAssignableFrom(obj.GetType()))
-                throw new GameFrameworkException(String.Format("Object type '{0}' is invalid", obj.GetType().FullName));
+                throw new Exception(String.Format("Object type '{0}' is invalid", obj.GetType().FullName));
 
             if (HasPool(obj)) return _componentPools[obj];
             else return RegisterPool(obj);

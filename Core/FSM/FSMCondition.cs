@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nep.FSM
+namespace Nap.FSM
 {
     // Adapted from Iris Fenrir
     /// <summary>

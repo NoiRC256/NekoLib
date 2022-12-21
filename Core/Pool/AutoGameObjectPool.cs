@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Nep.Pool
+namespace Nap.Pool
 {
     /// <summary>
     /// Prefab pool with default delegates for pooling gameobjects.

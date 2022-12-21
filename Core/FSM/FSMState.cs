@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Nep.FSM
+namespace Nap.FSM
 {
     // Adapted from Iris Fenrir
     /// <summary>

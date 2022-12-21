@@ -1,12 +1,12 @@
 using System;
-using Nep.DataStructures;
+using Nap.DataStructures;
 
-namespace Nep.Stats
+namespace Nap.Stats
 {
     /// <summary>
     /// Interface for property that represents a modifiable stat.
     /// </summary>
-    public interface IStat : Nep.DataStructures.IReadonlyProperty<float>
+    public interface IStat : Nap.DataStructures.IReadonlyProperty<float>
     {
         public event Action<float> ValueChanged;
         public event Action<IStatModifier> ModifierAdded;

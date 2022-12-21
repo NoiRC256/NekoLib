@@ -1,4 +1,4 @@
-namespace Nep.Stats
+namespace Nap.Stats
 {
     public enum StatModifierType
     {

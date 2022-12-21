@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Nep.Test
+namespace Nap.Test
 {
     public class IoCTest
     {

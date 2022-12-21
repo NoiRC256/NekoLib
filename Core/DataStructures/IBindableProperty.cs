@@ -1,6 +1,6 @@
 using System;
 
-namespace Nep.DataStructures
+namespace Nap.DataStructures
 {
     /// <summary>
     /// Interface for property that holds a value and exposes an event for value change.
