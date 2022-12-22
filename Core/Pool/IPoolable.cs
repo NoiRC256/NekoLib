@@ -4,5 +4,6 @@
     {
         void OnTakeFromPool();
         void OnReturnToPool();
+        void Destroy();
     }
 }

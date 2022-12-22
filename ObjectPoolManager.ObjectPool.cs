@@ -70,6 +70,7 @@ namespace Nap
 
             protected virtual void Destroy(T obj)
             {
+                obj.Destroy();
             }
         }
 

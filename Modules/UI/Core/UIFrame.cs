@@ -54,7 +54,7 @@ namespace Nap.UI
             }
         }
 
-        public void OnRequestOpen(object sender, UIChangeScreenEvtArgs args)
+        public void OnRequestOpen(UIChangeScreenEvtArgs args)
         {
             Open(args.ScreenId, args.ShouldAnimate);
         }
@@ -67,7 +67,7 @@ namespace Nap.UI
             }
         }
 
-        public void OnRequestClose(object sender, UIChangeScreenEvtArgs args)
+        public void OnRequestClose(UIChangeScreenEvtArgs args)
         {
             Close(args.ScreenId, args.ShouldAnimate);
         }

@@ -15,6 +15,7 @@ namespace Nap.UI
         [field: SerializeField] public TransitionBase AnimShow { get; set; }
         [field: SerializeField] public TransitionBase AnimHide { get; set; }
 
+        public UIControllerBase ParentController { get; set; }
         public Action<UIControllerBase> ScreenDestroyed { get; set; }
 
         #region Show
@@ -66,12 +67,12 @@ namespace Nap.UI
 
         public virtual void SignalOpenScreen(string id)
         {
-            GlobalEvents.Get<SignalUIOpenScreen>().Invoke(this, new UIChangeScreenEvtArgs(id));
+            GlobalEvents.Get<SignalUIOpenScreen>().Invoke(new UIChangeScreenEvtArgs(id));
         }
 
         public virtual void SignalCloseScreen(string id)
         {
-            GlobalEvents.Get<SignalUICloseScreen>().Invoke(this, new UIChangeScreenEvtArgs(id));
+            GlobalEvents.Get<SignalUICloseScreen>().Invoke(new UIChangeScreenEvtArgs(id));
         }
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Nap.Pool
 {
-    public interface IObjectPool<T>
+    public interface IObjectPool
     {
         /// <summary>
         /// If true, an object can be simultaneously spawned multiple times.
@@ -33,7 +33,9 @@ namespace Nap.Pool
         /// Clear the pool.
         /// </summary>
         void Clear();
-
+    }
+    public interface IObjectPool<T> : IObjectPool
+    {
         /// <summary>
         /// Spawn an object from the pool.
         /// </summary>

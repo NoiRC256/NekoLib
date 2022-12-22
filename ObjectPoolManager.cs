@@ -72,7 +72,7 @@ namespace Nap
         public ObjectPoolBase GetPool(Type type)
         {
             if (!typeof(IPoolable).IsAssignableFrom(type))
-                throw new Exception(String.Format("Object type '{0}' is invalid", type.FullName));
+                throw new Exception(String.Format("Object type '{0}' is invalid. Object type must implement IPoolable.", type.FullName));
 
             if (HasPool(type)) return _referencePools[type];
             else return RegisterPool(type);
@@ -81,7 +81,7 @@ namespace Nap
         public IObjectPool<T> GetPool<T>(T obj) where T : Component, IPoolable
         {
             if (obj == null) 
-                throw new Exception("Object is invalid.");
+                throw new Exception("Object is invalid: null object.");
             if (HasPool<T>(obj)) return (IObjectPool<T>)_componentPools[obj];
             else return RegisterPool<T>(obj);
         }
@@ -91,7 +91,7 @@ namespace Nap
             if (obj == null) 
                 throw new Exception("Object is invalid.");
             if (!typeof(IPoolable).IsAssignableFrom(obj.GetType()))
-                throw new Exception(String.Format("Object type '{0}' is invalid", obj.GetType().FullName));
+                throw new Exception(String.Format("Object type '{0}' is invalid. Object type must implement IPoolable.", obj.GetType().FullName));
 
             if (HasPool(obj)) return _componentPools[obj];
             else return RegisterPool(obj);
