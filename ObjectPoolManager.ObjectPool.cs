@@ -8,7 +8,7 @@ namespace Nap
     public sealed partial class ObjectPoolManager : IObjectPoolManager
     {
         /// <summary>
-        /// Generic object pool.
+        /// Generic type-safe object pool for <see cref="IPoolable"/> instances.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         private class ReferencePool<T> : ObjectPoolBase, IObjectPool<T> where T : IPoolable
@@ -49,7 +49,16 @@ namespace Nap
                 return obj;
             }
 
-            public void Release(T obj)
+            public bool Release(object obj)
+            {
+                if (obj == null || obj.GetType() != typeof(T))
+                {
+                    return false;
+                }
+                return Release((T)obj);
+            }
+
+            public bool Release(T obj)
             {
                 if (_objectStack.Count >= Capacity)
                 {
@@ -61,6 +70,7 @@ namespace Nap
                     obj.OnReturnToPool();
                 }
                 CountActive -= 1;
+                return true;
             }
 
             protected virtual T Create()
@@ -75,7 +85,7 @@ namespace Nap
         }
 
         /// <summary>
-        /// Object pool that pools components. Can be used to pool instances of a prefab.
+        /// Generic type-safe object pool for <see cref="IPoolable"/> components. Can be used to pool instances of a prefab.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         private class ComponentPool<T> : ReferencePool<T>, IObjectPool<T> where T : Component, IPoolable
@@ -90,11 +100,6 @@ namespace Nap
             protected override T Create()
             {
                 return GameObject.Instantiate(_component);
-            }
-
-            protected override void Destroy(T obj)
-            {
-                GameObject.Destroy(obj.gameObject);
             }
         }
     }

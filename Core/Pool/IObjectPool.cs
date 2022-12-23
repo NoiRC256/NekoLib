@@ -2,6 +2,10 @@ using UnityEngine;
 
 namespace Nap.Pool
 {
+    /// <summary>
+    /// Base interface for object pool.
+    /// <para>Intended to be assigned to pooled instances so they can directly release themselves into a pool.</para>
+    /// </summary>
     public interface IObjectPool
     {
         /// <summary>
@@ -33,7 +37,18 @@ namespace Nap.Pool
         /// Clear the pool.
         /// </summary>
         void Clear();
+
+        /// <summary>
+        /// Unspawn an object back into the pool.
+        /// </summary>
+        /// <param name="obj"></param>
+        bool Release(object obj);
     }
+
+    /// <summary>
+    /// Generic interface for object pool. Type-safe object pools should implement this interface.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IObjectPool<T> : IObjectPool
     {
         /// <summary>
@@ -43,9 +58,9 @@ namespace Nap.Pool
         T Get();
 
         /// <summary>
-        /// Unspawn an object back into the pool.
+        /// Unspawn an object of the pooled type back into the pool.
         /// </summary>
         /// <param name="obj"></param>
-        void Release(T obj);
+        bool Release(T obj);
     }
 }

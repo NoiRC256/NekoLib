@@ -106,11 +106,20 @@ namespace Nap.Pool
             return obj;
         }
 
+        public bool Release(object obj)
+        {
+            if (obj == null || obj.GetType() != typeof(T))
+            {
+                return false;
+            }
+            return Release((T)obj);
+        }
+
         /// <summary>
         /// Release an object into the pool.
         /// </summary>
         /// <param name="obj"></param>
-        public void Release(T obj)
+        public bool Release(T obj)
         {
             if (_objectStack.Count >= Capacity)
             {
@@ -122,6 +131,7 @@ namespace Nap.Pool
                 _onRelease(obj);
             }
             CountActive -= 1;
+            return true;
         }
     }
 }

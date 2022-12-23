@@ -43,21 +43,21 @@ namespace Nap.Pool
 
         #region Get
         /// <summary>
-        /// Get object pool by type.
+        /// Get an object pool by type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         IObjectPool<T> GetPool<T>() where T : IPoolable;
 
         /// <summary>
-        /// Get object pool by type.
+        /// Get an object pool base by type.
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
         ObjectPoolBase GetPool(Type type);
 
         /// <summary>
-        /// Get object pool by component prefab.
+        /// Get a component object pool by component or prefab.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
@@ -65,7 +65,7 @@ namespace Nap.Pool
         IObjectPool<T> GetPool<T>(T obj) where T : Component, IPoolable;
 
         /// <summary>
-        /// Get object pool by component prefab.
+        /// Get a component object pool base by component or prefab.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -88,7 +88,7 @@ namespace Nap.Pool
         bool HasPool(Type type);
 
         /// <summary>
-        /// Check whether object pool exists by component prefab.
+        /// Check whether object pool exists by component or prefab.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
@@ -96,7 +96,7 @@ namespace Nap.Pool
         bool HasPool<T>(T obj) where T : Component, IPoolable;
 
         /// <summary>
-        /// Check whether object pool exists by component prefab.
+        /// Check whether object pool exists by component or prefab.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
