@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using Nap.Events;
-using Assets.Nep.UI;
 
 namespace Nap.UI
 {
@@ -11,12 +10,11 @@ namespace Nap.UI
     public class UIControllerBase : MonoBehaviour
     {
         [field: SerializeField] public string ScreenId { get; set; }
-        [field: SerializeField] public string LayerId { get; set; }
+        [field: SerializeField] public int LayerId { get; set; }
         [field: SerializeField] public TransitionBase AnimShow { get; set; }
         [field: SerializeField] public TransitionBase AnimHide { get; set; }
 
         public UIControllerBase ParentController { get; set; }
-        public Action<UIControllerBase> ScreenDestroyed { get; set; }
 
         #region Show
         public virtual void UIShow(UIControllerContextBase context = null, bool animate = true)
@@ -67,12 +65,12 @@ namespace Nap.UI
 
         public virtual void SignalOpenScreen(string id)
         {
-            GlobalEvents.Get<SignalUIOpenScreen>().Invoke(new UIChangeScreenEvtArgs(id));
+            GlobalEvents.Get<UISignalOpenScreen>().Invoke(new UISignalScreenEvtArgs(id));
         }
 
         public virtual void SignalCloseScreen(string id)
         {
-            GlobalEvents.Get<SignalUICloseScreen>().Invoke(new UIChangeScreenEvtArgs(id));
+            GlobalEvents.Get<UISignalCloseScreen>().Invoke(new UISignalScreenEvtArgs(id));
         }
     }
 }

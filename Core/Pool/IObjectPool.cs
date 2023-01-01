@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Nap.Pool
@@ -9,29 +11,27 @@ namespace Nap.Pool
     public interface IObjectPool
     {
         /// <summary>
-        /// If true, an object can be simultaneously spawned multiple times.
+        /// Capacity of the pool.
         /// </summary>
-        bool AllowMultiSpawn { get; }
-        /// <summary>
-        /// Number of objects in use.
-        /// </summary>
-        int CountActive { get; }
+        int Capacity { get; }
         /// <summary>
         /// Number of objects in the pool.
         /// </summary>
-        int CountInactive { get; }
+        int Count { get; }
         /// <summary>
         /// Last time an object is spawned.
         /// </summary>
         float LastUseTime { get; }
         /// <summary>
-        /// Time until the pool is automatically cleared.
+        /// Time at which the pool will be automatically cleared.
         /// </summary>
         float ExpireTime { get; }
         /// <summary>
-        /// Capacity of the pool.
+        /// Time until the pool is automatically cleared.
         /// </summary>
-        int Capacity { get; }
+        float ExpireInterval { get; }
+
+        public event Action<int> CountChanged;
 
         /// <summary>
         /// Clear the pool.

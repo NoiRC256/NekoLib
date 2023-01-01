@@ -10,17 +10,17 @@ namespace Nap.UI
     /// <typeparam name="TController">Type of UI screen controller interface</typeparam>
     public class UILayer : MonoBehaviour
     {
-        [field: SerializeField] public string LayerId { get; private set; }
         [field:SerializeField] public Canvas RootCanvas { get; private set; }
+        public int LayerId { get; set; }
         public Camera UICamera => RootCanvas.worldCamera;
         public UIPageControllerBase CurrentPage { get; set; }
 
         protected Dictionary<string, UIControllerBase> _controllers = new Dictionary<string, UIControllerBase>();
         protected Stack<UIPageControllerBase> _pageStack = new Stack<UIPageControllerBase>();
 
-        public UILayer(string LayerId, Canvas rootCanvas)
+        public UILayer(int layerId, Canvas rootCanvas)
         {
-            LayerId = LayerId;
+            LayerId = layerId;
             RootCanvas = rootCanvas;
         }
 
@@ -38,7 +38,6 @@ namespace Nap.UI
         {
             controller.ScreenId = id;
             _controllers.Add(id, controller);
-            controller.ScreenDestroyed += OnScreenDestroyed;
         }
 
         public void UnregisterScreen(string id, UIControllerBase controller)
@@ -49,7 +48,6 @@ namespace Nap.UI
 
         protected virtual void InternalUnregisterScreen(string id, UIControllerBase controller)
         {
-            controller.ScreenDestroyed -= OnScreenDestroyed;
             _controllers.Remove(id);
         }
 

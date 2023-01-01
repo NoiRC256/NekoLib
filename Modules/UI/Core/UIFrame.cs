@@ -1,8 +1,7 @@
-using Assets.Nep.UI;
-using Nap.Events;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Nap;
+using Nap.Events;
 
 namespace Nap.UI
 {
@@ -10,7 +9,7 @@ namespace Nap.UI
     /// Entry point of the UI framework. Keeps track of UI layers and UI controllers.
     /// Provides methods to change the state of the UI.
     /// </summary>
-    public class UIFrame : MonoBehaviour
+    public class UIFrame : MonoSingleton<UIFrame>
     {
         class UIControllerEntry
         {
@@ -23,38 +22,35 @@ namespace Nap.UI
             }
         }
 
-        private Dictionary<string, UILayer> _registeredUILayers = new Dictionary<string, UILayer>();
+        private Dictionary<int, UILayer> _registeredUILayers = new Dictionary<int, UILayer>();
         private Dictionary<string, UIControllerEntry> _registeredControllers = new Dictionary<string, UIControllerEntry>();
 
         #region MonoBehaviour
-        private void Awake()
-        {
-        }
-
         private void OnEnable()
         {
-            GlobalEvents.Get<SignalUIOpenScreen>().Event += OnRequestOpen;
-            GlobalEvents.Get<SignalUICloseScreen>().Event += OnRequestClose;
+            GlobalEvents.Get<UISignalOpenScreen>().Event += OnRequestOpen;
+            GlobalEvents.Get<UISignalCloseScreen>().Event += OnRequestClose;
         }
 
         private void OnDisable()
         {
-            GlobalEvents.Get<SignalUIOpenScreen>().Event -= OnRequestOpen;
-            GlobalEvents.Get<SignalUICloseScreen>().Event -= OnRequestClose;
+            GlobalEvents.Get<UISignalOpenScreen>().Event -= OnRequestOpen;
+            GlobalEvents.Get<UISignalCloseScreen>().Event -= OnRequestClose;
         }
-
         #endregion
 
-        public void Init()
+        public override void Init()
         {
             UILayer[] uiLayers = GetComponentsInChildren<UILayer>();
-            foreach (var uiLayer in uiLayers)
+            for (int i = 0; i < uiLayers.Length; i++)
             {
+                var uiLayer = uiLayers[i];
+                uiLayer.LayerId = i;
                 RegisterUILayer(uiLayer.LayerId, uiLayer);
             }
         }
 
-        public void OnRequestOpen(UIChangeScreenEvtArgs args)
+        public void OnRequestOpen(UISignalScreenEvtArgs args)
         {
             Open(args.ScreenId, args.ShouldAnimate);
         }
@@ -67,7 +63,7 @@ namespace Nap.UI
             }
         }
 
-        public void OnRequestClose(UIChangeScreenEvtArgs args)
+        public void OnRequestClose(UISignalScreenEvtArgs args)
         {
             Close(args.ScreenId, args.ShouldAnimate);
         }
@@ -80,12 +76,12 @@ namespace Nap.UI
             }
         }
 
-        private void RegisterUILayer(string layerId, UILayer uiLayer)
+        private void RegisterUILayer(int layerId, UILayer uiLayer)
         {
             _registeredUILayers.Add(layerId, uiLayer);
         }
 
-        public UILayer GetUILayer(string layerId)
+        public UILayer GetUILayer(int layerId)
         {
             if (_registeredUILayers.TryGetValue(layerId, out UILayer uiLayer))
             {

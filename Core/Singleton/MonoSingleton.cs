@@ -18,11 +18,11 @@ namespace Nap
             set { if (_instance == null) _instance = value; }
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(this);
+                GameObject.Destroy(this.gameObject);
                 return;
             }
         }

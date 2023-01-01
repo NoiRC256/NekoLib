@@ -7,26 +7,17 @@ namespace Nap.Pool
     /// Generic object pool where behaviour of pooled objects can be defined by delegates.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class AutoPool<T> : IObjectPool<T> where T : class, new()
+    public class AutoPool<T> : ObjectPoolBase<T> where T : class, new()
     {
-        protected const int kDefaultCapacity = 10;
-
         private Stack<T> _objectStack = new Stack<T>();
         private Func<T> _create;
         private Action<T> _onGet;
         private Action<T> _onRelease;
         private Action<T> _destroy;
 
-        public int CountActive { get; private set; }
-        public int CountInactive => _objectStack.Count;
-        public bool AllowMultiSpawn { get; }
-        public float LastUseTime { get; private set; }
-        public float ExpireTime { get; set; }
-        public int Capacity { get; set; }
-
         public AutoPool(int capacity = kDefaultCapacity,
             Func<T> create = null, Action<T> onGet = null,
-            Action<T> onRelease = null, Action<T> destroy = null)
+            Action<T> onRelease = null, Action<T> destroy = null) : base(capacity)
         {
             Capacity = capacity;
             _create = create == null ? DefaultCreateFunc : create;
@@ -73,65 +64,43 @@ namespace Nap.Pool
         }
         #endregion
 
-        /// <summary>
-        /// Clear the pool.
-        /// </summary>
-        public void Clear()
-        {
-            for(int i = 0; i < _objectStack.Count; i++)
-            {
-                T obj = _objectStack.Pop();
-                if (obj != null) _destroy(obj);
-            }
-        }
-
-        /// <summary>
-        /// Take an object from the pool.
-        /// If no object available, create one.
-        /// </summary>
-        /// <returns></returns>
-        public T Get()
+        public override T Get()
         {
             T obj;
             if (_objectStack.Count > 0)
             {
-                obj = _objectStack.Pop();
+                obj = TakeFromPool();
             }
             else
             {
-                obj = _create();
+                obj = Create();
             }
-            _onGet(obj);
-            CountActive += 1;
+            _onGet.Invoke(obj);
             return obj;
         }
 
-        public bool Release(object obj)
-        {
-            if (obj == null || obj.GetType() != typeof(T))
-            {
-                return false;
-            }
-            return Release((T)obj);
-        }
-
-        /// <summary>
-        /// Release an object into the pool.
-        /// </summary>
-        /// <param name="obj"></param>
-        public bool Release(T obj)
+        public override bool Release(T obj)
         {
             if (_objectStack.Count >= Capacity)
             {
-                _destroy(obj);
+                Destroy(obj);
             }
             else
             {
-                _objectStack.Push(obj);
-                _onRelease(obj);
+                AddToPool(obj);
+                _onRelease.Invoke(obj);
             }
-            CountActive -= 1;
             return true;
+        }
+
+        protected override T Create()
+        {
+            return _create.Invoke();
+        }
+
+        protected override void Destroy(T obj)
+        {
+            _destroy.Invoke(obj);
         }
     }
 }

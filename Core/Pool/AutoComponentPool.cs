@@ -4,25 +4,34 @@ using UnityEngine;
 namespace Nap.Pool
 {
     /// <summary>
-    /// Prefab pool with default delegates for pooling gameobjects referenced by components.
+    /// Prefab pool with default delegates.
+    /// <para>Pools instances of a prefab referenced by a <see cref="Component"/> instance.</para>
     /// </summary>
-    public class AutoComponentPool : AutoPool<Component>, IObjectPool<Component>
+    public class AutoComponentPool<T> : AutoPool<T>, IObjectPool<T> where T : Component, new()
     {
-        private Component _obj;
+        private T _prefab;
 
-        protected override Component DefaultCreateFunc()
+        public AutoComponentPool(T prefab, int capacity = kDefaultCapacity,
+            Func<T> create = null, Action<T> onGet = null,
+            Action<T> onRelease = null, Action<T> destroy = null) 
+            : base(capacity, create, onGet, onRelease, destroy)
         {
-            return GameObject.Instantiate(_obj);
+            _prefab = prefab;
         }
 
-        protected override void DefaultOnRelease(Component obj)
+        protected override T DefaultCreateFunc()
+        {
+            return GameObject.Instantiate(_prefab);
+        }
+
+        protected override void DefaultOnRelease(T obj)
         {
             obj.gameObject.SetActive(false);
         }
 
-        protected override void DefaultOnDestroy(Component obj)
+        protected override void DefaultOnDestroy(T obj)
         {
-            GameObject.Destroy(obj);
+            GameObject.Destroy(obj.gameObject);
         }
     }
 }
