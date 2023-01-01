@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Nep
+namespace Nap
 {
     /// <summary>
     /// Service locator for game modules.

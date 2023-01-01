@@ -1,7 +1,8 @@
 using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Nep.Pool.Test
+namespace Nap.Pool.Test
 {
     public class ObjectPoolTest
     {
@@ -14,16 +15,28 @@ namespace Nep.Pool.Test
             public void OnTakeFromPool()
             {
             }
+
+            public void Destroy()
+            {
+
+            }
         }
 
         class PooledMono : MonoBehaviour, IPoolable
         {
             public void OnReturnToPool()
             {
+
             }
 
             public void OnTakeFromPool()
             {
+
+            }
+
+            public void Destroy()
+            {
+                GameObject.Destroy(this);
             }
         }
 

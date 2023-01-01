@@ -1,121 +1,108 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Nep.Pool;
+using Nap.Pool;
+using Unity.VisualScripting;
 
-namespace Nep
+namespace Nap
 {
+    /// <summary>
+    /// Object pool manager that manages pools for <see cref="IPoolable"/> instances.
+    /// </summary>
     public sealed partial class ObjectPoolManager : MonoBehaviour, IObjectPoolManager
     {
-        private const int kDefaultCapacity = int.MaxValue;
-        private const float kDefaultExpireTime = -1f;
+        private const int kDefaultCapacity = 30;
+        private const float kDefaultExpireTime = 30f;
+        private const float kDefaultTickInterval = 15f;
 
-        private static Dictionary<Type, ObjectPoolBase> _referencePools;
-        private static Dictionary<object, ObjectPoolBase> _componentPools;
+        private List<IObjectPool> _pools;
+        private Dictionary<Type, IObjectPool> _referencePools;
+        private Dictionary<object, IObjectPool> _prefabPools;
+        private float _timer;
 
+        public float TickInterval { get; set; }
         public int Count { get; private set; }
+        public Dictionary<Type, IObjectPool> ReferencePools => _referencePools;
+        public Dictionary<object, IObjectPool> PrefabPools => _prefabPools;
+        public float Timer => _timer;
 
+        #region MonoBehaviour
         private void Awake()
         {
-            _referencePools = new Dictionary<Type, ObjectPoolBase>();
-            _componentPools = new Dictionary<object, ObjectPoolBase>();
+            _pools = new List<IObjectPool>();
+            _referencePools = new Dictionary<Type, IObjectPool>();
+            _prefabPools = new Dictionary<object, IObjectPool>();
+            TickInterval = kDefaultTickInterval;
+            _timer = TickInterval;
         }
 
-        public IObjectPool<T> RegisterPool<T>() where T : IPoolable
+        private void Update()
+        {
+            _timer += Time.deltaTime;
+            if(_timer >= TickInterval)
+            {
+                _timer = 0f;
+                // Clear pools that reached capacity or reached expire time since last use.
+                for(int i = 0; i < _pools.Count; i++)
+                {
+                    IObjectPool pool = _pools[i];
+                    if(pool.Count >= pool.Capacity || Time.time >= pool.ExpireTime)
+                    {
+                        pool.Clear();
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Register
+        public IObjectPool<T> RegisterPool<T>() where T : class, new()
         {
             ReferencePool<T> pool = new ReferencePool<T>();
             _referencePools.Add(typeof(T), pool);
-            return (IObjectPool<T>)_referencePools[typeof(T)];
-        }
-
-        public ObjectPoolBase RegisterPool(Type type)
-        {
-            if (!typeof(IPoolable).IsAssignableFrom(type))
-                throw new GameFrameworkException(String.Format("Object type '{0}' is invalid", type.FullName));
-
-            Type poolType = typeof(ReferencePool<>).MakeGenericType(type);
-            ObjectPoolBase pool = (ObjectPoolBase)Activator.CreateInstance(poolType);
-            _referencePools.Add(type, pool);
+            _pools.Add(pool);
             return pool;
         }
 
-        public IObjectPool<T> RegisterPool<T>(T obj) where T : Component, IPoolable
+        public IObjectPool<T> RegisterPool<T>(T obj) where T : Component
         {
-            if (obj == null) 
-                throw new GameFrameworkException("Object is invalid.");
+            if (obj == null)
+                throw new Exception("Object is invalid: null object.");
 
-            ComponentPool<T> pool = new ComponentPool<T>(obj);
-            _componentPools.Add(obj, pool);
+            IObjectPool<T> pool = new ComponentPool<T>(obj);
+            _prefabPools.Add(obj, pool);
+            _pools.Add(pool);
             return pool;
         }
+        #endregion
 
-        public ObjectPoolBase RegisterPool(Component obj)
-        {
-            if (obj == null) 
-                throw new GameFrameworkException("Object is invalid.");
-            Type type = obj.GetType();
-            if (!typeof(IPoolable).IsAssignableFrom(type))
-                throw new GameFrameworkException(String.Format("Object type '{0}' is invalid", type.FullName));
-
-            Type poolType = typeof(ComponentPool<>).MakeGenericType(type);
-            ObjectPoolBase pool = (ObjectPoolBase)Activator.CreateInstance(poolType);
-            _componentPools.Add(obj, pool);
-            return pool;
-        }
-
-        public IObjectPool<T> GetPool<T>() where T : IPoolable
+        #region Get
+        public IObjectPool<T> GetPool<T>() where T : class, new()
         {
             if (HasPool<T>()) return (IObjectPool<T>)_referencePools[typeof(T)];
             else return RegisterPool<T>();
         }
-
-        public ObjectPoolBase GetPool(Type type)
-        {
-            if (!typeof(IPoolable).IsAssignableFrom(type))
-                throw new GameFrameworkException(String.Format("Object type '{0}' is invalid", type.FullName));
-
-            if (HasPool(type)) return _referencePools[type];
-            else return RegisterPool(type);
-        }
-
-        public IObjectPool<T> GetPool<T>(T obj) where T : Component, IPoolable
+ 
+        public IObjectPool<T> GetPool<T>(T obj) where T : Component
         {
             if (obj == null) 
-                throw new GameFrameworkException("Object is invalid.");
-            if (HasPool<T>(obj)) return (IObjectPool<T>)_componentPools[obj];
+                throw new Exception("Object is invalid: null object.");
+
+            if (HasPool<T>(obj)) return (IObjectPool<T>)_prefabPools[obj];
             else return RegisterPool<T>(obj);
         }
+        #endregion
 
-        public ObjectPoolBase GetPool(Component obj)
+        #region Check
+        public bool HasPool<T>() where T : class, new()
         {
-            if (obj == null) 
-                throw new GameFrameworkException("Object is invalid.");
-            if (!typeof(IPoolable).IsAssignableFrom(obj.GetType()))
-                throw new GameFrameworkException(String.Format("Object type '{0}' is invalid", obj.GetType().FullName));
-
-            if (HasPool(obj)) return _componentPools[obj];
-            else return RegisterPool(obj);
+            return _referencePools.ContainsKey(typeof(T));
         }
 
-        public bool HasPool<T>() where T : IPoolable
+        public bool HasPool<T>(T obj) where T : Component
         {
-            var type = typeof(T);
-            return _referencePools.ContainsKey(type);
+            return _prefabPools.ContainsKey(obj);
         }
-
-        public bool HasPool(Type type)
-        {
-            return _referencePools.ContainsKey(type);
-        }
-
-        public bool HasPool<T>(T obj) where T : Component, IPoolable
-        {
-            return _componentPools.ContainsKey(obj);
-        }
-
-        public bool HasPool(Component obj)
-        {
-            return _componentPools.ContainsKey(obj);
-        }
+        #endregion
     }
 }

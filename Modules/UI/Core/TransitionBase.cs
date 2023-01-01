@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Nep.UI
+namespace Nap.UI
 {
     public abstract class TransitionBase : MonoBehaviour
     {
-        public abstract void PlayAnimation(Transform tr, Action onComplete);
+        public abstract void PlayAnimation(Transform tr, Action onComplete = null);
     }
 }

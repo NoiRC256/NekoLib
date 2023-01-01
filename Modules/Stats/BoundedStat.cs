@@ -1,7 +1,8 @@
 using UnityEngine;
-using Nep.DataStructures;
+using Nap.DataStructures;
+using System;
 
-namespace Nep.Stats
+namespace Nap.Stats
 {
     /// <summary>
     /// Data class that represents a modifiable stat.
@@ -9,11 +10,33 @@ namespace Nep.Stats
     /// </summary>
     public class BoundedStat : Stat
     {
-        public override float BaseValue { set => base.BaseValue = Mathf.Clamp(value, MinValue, MaxValue); }
+        public override float BaseValue {
+            set {
+                if (_baseValue != value)
+                {
+                    _baseValue = value;
+
+                    if (_baseValue <= MinValue)
+                    {
+                        _baseValue = MinValue;
+                        ReachedMin?.Invoke(_baseValue);
+                    } else if (_baseValue >= MaxValue)
+                    {
+                        _baseValue = MaxValue;
+                        ReachedMax?.Invoke(_baseValue);
+                    }
+                    _isDirty = true;
+                    OnValueChange();
+                }
+            }
+        }
         public IReadonlyProperty<float> MinProperty { get; }
         public IReadonlyProperty<float> MaxProperty { get; }
         public float MinValue => MinProperty.Value;
         public float MaxValue => MaxProperty.Value;
+
+        public event Action<float> ReachedMax;
+        public event Action<float> ReachedMin;
 
         public BoundedStat(float baseValue, float minValue, float maxValue) : base(baseValue)
         {

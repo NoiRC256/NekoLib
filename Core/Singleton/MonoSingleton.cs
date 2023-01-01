@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Nep
+namespace Nap
 {
     public abstract class MonoSingleton : MonoBehaviour
     {
@@ -18,11 +18,11 @@ namespace Nep
             set { if (_instance == null) _instance = value; }
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(this);
+                GameObject.Destroy(this.gameObject);
                 return;
             }
         }

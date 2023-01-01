@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Nep.DataStructures
+namespace Nap.DataStructures
 {
     /// <summary>
     /// Data class that holds a value and exposes events for value change.

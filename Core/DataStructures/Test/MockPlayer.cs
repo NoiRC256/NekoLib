@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Nep.DataStructures.Test
+namespace Nap.DataStructures.Test
 {
     public class MockPlayer : MonoBehaviour
     {

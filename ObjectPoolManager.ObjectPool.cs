@@ -1,99 +1,69 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Nep.Pool;
+using Nap.Pool;
+using static UnityEditor.Experimental.GraphView.Port;
 
-namespace Nep
+namespace Nap
 {
     public sealed partial class ObjectPoolManager : IObjectPoolManager
     {
         /// <summary>
-        /// Generic object pool.
+        /// Type-safe object pool.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        private class ReferencePool<T> : ObjectPoolBase, IObjectPool<T> where T : IPoolable
+        private class ReferencePool<T> : ObjectPoolBase<T> where T : class, new()
         {
-            protected const int kDefaultCapacity = 10;
-
-            private Stack<T> _objectStack = new Stack<T>();
-
-            public override int CountInactive => _objectStack.Count;
-
-            public ReferencePool()
+            protected override T Create()
             {
-                Capacity = kDefaultCapacity;
-            }
-
-            public void Clear()
-            {
-                for (int i = 0; i < _objectStack.Count; i++)
-                {
-                    T obj = _objectStack.Pop();
-                    if (obj != null) Destroy(obj);
-                }
-            }
-
-            public T Get()
-            {
-                T obj;
-                if (_objectStack.Count > 0)
-                {
-                    obj = _objectStack.Pop();
-                }
-                else
-                {
-                    obj = Create();
-                }
-                obj.OnTakeFromPool();
-                CountActive += 1;
-                return obj;
-            }
-
-            public void Release(T obj)
-            {
-                if (_objectStack.Count >= Capacity)
-                {
-                    Destroy(obj);
-                }
-                else
-                {
-                    _objectStack.Push(obj);
-                    obj.OnReturnToPool();
-                }
-                CountActive -= 1;
-            }
-
-            protected virtual T Create()
-            {
-                return Activator.CreateInstance<T>();
-            }
-
-            protected virtual void Destroy(T obj)
-            {
+                return new T();
             }
         }
 
         /// <summary>
-        /// Object pool that pools components. Can be used to pool instances of a prefab.
+        /// Type-safe component pool. Can be used to pool instances of a prefab.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        private class ComponentPool<T> : ReferencePool<T>, IObjectPool<T> where T : Component, IPoolable
+        private class ComponentPool<T> : ObjectPoolBase<T> where T : Component
         {
-            private T _component;
+            private T _prefab;
 
-            public ComponentPool(T component) : base()
+            public ComponentPool(T prefab, int capacity = kDefaultCapacity) : base(capacity)
             {
-                _component = component;
+                _prefab = prefab;
             }
 
             protected override T Create()
             {
-                return GameObject.Instantiate(_component);
+                return GameObject.Instantiate(_prefab);
             }
 
             protected override void Destroy(T obj)
             {
                 GameObject.Destroy(obj.gameObject);
+            }
+        }
+
+        /// <summary>
+        /// Gameobject pool. Can be used to pool instances of a prefab.
+        /// </summary>
+        private class GameObjectPool : ObjectPoolBase<GameObject>
+        {
+            private GameObject _prefab;
+
+            public GameObjectPool(GameObject prefab, int capacity = kDefaultCapacity) : base(capacity)
+            {
+                _prefab = prefab;
+            }
+
+            protected override GameObject Create()
+            {
+                return GameObject.Instantiate(_prefab);
+            }
+
+            protected override void Destroy(GameObject obj)
+            {
+                GameObject.Destroy(obj);
             }
         }
     }

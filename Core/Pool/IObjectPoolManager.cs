@@ -1,12 +1,14 @@
-using System;
 using UnityEngine;
 
-namespace Nep.Pool
+namespace Nap.Pool
 {
+    /// <summary>
+    /// Interface for object pool manager that manages pools for <see cref="IPoolable"/> instances.
+    /// </summary>
     public interface IObjectPoolManager
     {
         /// <summary>
-        /// Number of object pools.
+        /// Number of pools.
         /// </summary>
         int Count { get; }
 
@@ -16,91 +18,50 @@ namespace Nep.Pool
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        IObjectPool<T> RegisterPool<T>() where T : IPoolable;
+        IObjectPool<T> RegisterPool<T>() where T : class, new();
 
         /// <summary>
-        /// Create and register a new pool of specified type.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        ObjectPoolBase RegisterPool(Type type);
-
-        /// <summary>
-        /// Create and register a new pool of specified component prefab.
+        /// Create and register a new pool of specified component.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        IObjectPool<T> RegisterPool<T>(T obj) where T : Component, IPoolable;
-
-        /// <summary>
-        /// Create and register a new pool of specified component prefab.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        ObjectPoolBase RegisterPool(Component obj);
+        IObjectPool<T> RegisterPool<T>(T obj) where T : Component;
         #endregion
 
         #region Get
         /// <summary>
-        /// Get object pool by type.
+        /// Get a pool by type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        IObjectPool<T> GetPool<T>() where T : IPoolable;
+        IObjectPool<T> GetPool<T>() where T : class, new();
 
         /// <summary>
-        /// Get object pool by type.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        ObjectPoolBase GetPool(Type type);
-
-        /// <summary>
-        /// Get object pool by component prefab.
+        /// Get a pool by component.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        IObjectPool<T> GetPool<T>(T obj) where T : Component, IPoolable;
+        IObjectPool<T> GetPool<T>(T obj) where T : Component;
 
-        /// <summary>
-        /// Get object pool by component prefab.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        ObjectPoolBase GetPool(Component obj);
         #endregion
 
         #region Check
         /// <summary>
-        /// Check whether object pool exists by type.
+        /// Check whether pool exists by type.
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        bool HasPool<T>() where T : IPoolable;
+        bool HasPool<T>() where T : class, new();
 
         /// <summary>
-        /// Check whether object pool exists by type.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        bool HasPool(Type type);
-
-        /// <summary>
-        /// Check whether object pool exists by component prefab.
+        /// Check whether pool exists by component.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        bool HasPool<T>(T obj) where T : Component, IPoolable;
-
-        /// <summary>
-        /// Check whether object pool exists by component prefab.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        bool HasPool(Component obj);
+        bool HasPool<T>(T obj) where T : Component;
         #endregion
     }
 }

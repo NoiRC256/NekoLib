@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
 
-namespace Nep.Pool
+namespace Nap.Pool
 {
     /// <summary>
-    /// Prefab pool with default delegates for pooling gameobjects.
+    /// Prefab pool with default delegates.
+    /// <para>Pools instances of a prefb referenced by <see cref="GameObject"/>.</para>
     /// </summary>
     public class AutoGameObjectPool : AutoPool<GameObject>, IObjectPool<GameObject>
     {
