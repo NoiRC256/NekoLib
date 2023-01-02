@@ -15,9 +15,9 @@ namespace Nap
         private const float kDefaultExpireTime = 30f;
         private const float kDefaultTickInterval = 15f;
 
-        private List<IObjectPool> _pools;
-        private Dictionary<Type, IObjectPool> _referencePools;
-        private Dictionary<object, IObjectPool> _prefabPools;
+        private List<IObjectPool> _pools = new List<IObjectPool>();
+        private Dictionary<Type, IObjectPool> _referencePools = new Dictionary<Type, IObjectPool>();
+        private Dictionary<object, IObjectPool> _prefabPools = new Dictionary<object, IObjectPool>();
         private float _timer;
 
         public float TickInterval { get; set; }
@@ -36,17 +36,17 @@ namespace Nap
             _timer = TickInterval;
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             _timer += Time.deltaTime;
-            if(_timer >= TickInterval)
+            if (_timer >= TickInterval)
             {
                 _timer = 0f;
                 // Clear pools that reached capacity or reached expire time since last use.
-                for(int i = 0; i < _pools.Count; i++)
+                for (int i = 0; i < _pools.Count; i++)
                 {
                     IObjectPool pool = _pools[i];
-                    if(pool.Count >= pool.Capacity || Time.time >= pool.ExpireTime)
+                    if (pool.Count >= pool.Capacity || Time.time >= pool.ExpireTime)
                     {
                         pool.Clear();
                     }
@@ -82,10 +82,10 @@ namespace Nap
             if (HasPool<T>()) return (IObjectPool<T>)_referencePools[typeof(T)];
             else return RegisterPool<T>();
         }
- 
+
         public IObjectPool<T> GetPool<T>(T obj) where T : Component
         {
-            if (obj == null) 
+            if (obj == null)
                 throw new Exception("Object is invalid: null object.");
 
             if (HasPool<T>(obj)) return (IObjectPool<T>)_prefabPools[obj];

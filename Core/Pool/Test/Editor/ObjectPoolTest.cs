@@ -6,14 +6,11 @@ namespace Nap.Pool.Test
 {
     public class ObjectPoolTest
     {
-        class PooledType : IPoolable
+        class PooledType
         {
             public void OnReturnToPool()
             {
-            }
 
-            public void OnTakeFromPool()
-            {
             }
 
             public void Destroy()
@@ -22,14 +19,9 @@ namespace Nap.Pool.Test
             }
         }
 
-        class PooledMono : MonoBehaviour, IPoolable
+        class PooledMono : MonoBehaviour
         {
             public void OnReturnToPool()
-            {
-
-            }
-
-            public void OnTakeFromPool()
             {
 
             }
@@ -43,7 +35,9 @@ namespace Nap.Pool.Test
         [Test]
         public void RegisterPool()
         {
-            var manager = new ObjectPoolManager();
+            var manager = GameObject.Instantiate(new GameObject()).AddComponent<ObjectPoolManager>();
+
+            Assert.IsNotNull(manager);
 
             Assert.IsFalse(manager.HasPool<PooledType>());
 
@@ -55,7 +49,7 @@ namespace Nap.Pool.Test
         [Test]
         public void GetMultiplePools()
         {
-            var manager = new ObjectPoolManager();
+            var manager = GameObject.Instantiate(new GameObject()).AddComponent<ObjectPoolManager>();
             var pool = manager.GetPool<PooledType>();
 
             Assert.NotNull(pool);
@@ -72,7 +66,7 @@ namespace Nap.Pool.Test
         [Test]
         public void PoolType()
         {
-            var manager = new ObjectPoolManager();
+            var manager = GameObject.Instantiate(new GameObject()).AddComponent<ObjectPoolManager>();
             var pool = manager.GetPool<PooledType>();
 
             Assert.NotNull(pool);
@@ -82,7 +76,7 @@ namespace Nap.Pool.Test
         [Test]
         public void GetPrefabPools()
         {
-            var manager = new ObjectPoolManager();
+            var manager = GameObject.Instantiate(new GameObject()).AddComponent<ObjectPoolManager>();
             PooledMono prefab = GameObject.Instantiate(new GameObject()).AddComponent<PooledMono>();
             var pool = manager.GetPool(prefab);
 

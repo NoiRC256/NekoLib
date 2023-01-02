@@ -9,18 +9,15 @@ namespace Nap.Pool
         protected const int kDefaultCapacity = 30;
         protected const float kDefaultExpireTime = 30f;
 
-        private Stack<T> _objectStack = new Stack<T>();
-
         public int Capacity { get; set; }
         public int Count => _objectStack.Count;
         public float LastUseTime { get; set; }
         public float ExpireInterval { get; set; }
         public float ExpireTime => LastUseTime + ExpireInterval;
 
-
         public event Action<int> CountChanged;
 
-        private float _timeSinceLastUse;
+        private Stack<T> _objectStack = new Stack<T>();
 
         protected ObjectPoolBase(int capacity = kDefaultCapacity, float expireTime = kDefaultExpireTime)
         {

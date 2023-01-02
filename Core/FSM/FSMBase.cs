@@ -6,7 +6,7 @@ namespace Nap.FSM
     /// <summary>
     /// Base class for FSM.
     /// </summary>
-    public class BaseFSM<T>
+    public class FSMBase<T>
     {
         public string CurrentStateName { get; set; }
 
@@ -18,7 +18,7 @@ namespace Nap.FSM
 
         private bool _isInit = false;
 
-        public BaseFSM(T owner)
+        public FSMBase(T owner)
         {
             _owner = owner;
             _states = new Dictionary<string, FSMState<T>>();

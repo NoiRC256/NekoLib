@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace Nap
+namespace Nap.IoC
 {
     public class IoCContainer : IIoC
     {

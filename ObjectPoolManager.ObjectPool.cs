@@ -6,7 +6,7 @@ using static UnityEditor.Experimental.GraphView.Port;
 
 namespace Nap
 {
-    public sealed partial class ObjectPoolManager : IObjectPoolManager
+    public sealed partial class ObjectPoolManager : MonoBehaviour, IObjectPoolManager
     {
         /// <summary>
         /// Type-safe object pool.
@@ -35,7 +35,8 @@ namespace Nap
 
             protected override T Create()
             {
-                return GameObject.Instantiate(_prefab);
+                T obj = GameObject.Instantiate(_prefab);
+                return obj;
             }
 
             protected override void Destroy(T obj)

@@ -25,6 +25,9 @@ namespace Nap
                 GameObject.Destroy(this.gameObject);
                 return;
             }
+
+            Init();
+            DontDestroyOnLoad(gameObject);
         }
 
         public override void Init()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Nap
 {
@@ -9,6 +10,14 @@ namespace Nap
     public class GameEntry
     {
         private static readonly Dictionary<Type, object> _gameModules = new Dictionary<Type, object>();
+
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void Init()
+        {
+            _gameModules.Clear();
+        }
+#endif
 
         public static void RegisterModule<T>(object obj) where T : class
         {
