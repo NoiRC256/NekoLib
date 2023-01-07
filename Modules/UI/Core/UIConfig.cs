@@ -9,7 +9,7 @@ namespace Nap.UI
         [SerializeField] private UIFrame _uiPrefab;
         [SerializeField] private List<UIControllerBase> _controllerEntries;
 
-        public UIFrame Setup()
+        public UIFrame CreateUIFrame()
         {
             UIFrame uiFrame = GameObject.Instantiate(_uiPrefab);
             uiFrame.Init();

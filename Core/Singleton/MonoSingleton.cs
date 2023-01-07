@@ -9,6 +9,11 @@ namespace Nap
         public virtual void Init() { }
     }
 
+    /// <summary>
+    /// <see cref="MonoBehaviour"/> singleton with no lazy loading. 
+    /// Duplicate instances in the scene will be destroyed.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class MonoSingleton<T> : MonoSingleton where T : MonoSingleton<T>
     {
         private static T _instance;
@@ -20,14 +25,12 @@ namespace Nap
 
         protected virtual void Awake()
         {
+            // If there is already a different instance, destroy self.
             if (Instance != null && Instance != this)
             {
                 GameObject.Destroy(this.gameObject);
                 return;
             }
-
-            Init();
-            DontDestroyOnLoad(gameObject);
         }
 
         public override void Init()

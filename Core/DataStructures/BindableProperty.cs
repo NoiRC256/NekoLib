@@ -25,6 +25,11 @@ namespace Nap.DataStructures
 
         [SerializeField] protected T _value;
 
+        public BindableProperty()
+        {
+
+        }
+
         public BindableProperty(T value)
         {
             Value = value;
@@ -35,4 +40,16 @@ namespace Nap.DataStructures
             ValueChanged?.Invoke(Value);
         }
     }
+
+    [System.Serializable]
+    public class BindableInt : BindableProperty<int> { }
+
+    [System.Serializable]
+    public class BindableFloat : BindableProperty<float> { }
+
+    [System.Serializable]
+    public class BindableBool : BindableProperty<bool> { }
+
+    [System.Serializable]
+    public class BindbableVector3 : BindableProperty<Vector3> { }
 }

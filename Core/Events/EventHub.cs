@@ -10,13 +10,13 @@ namespace Nap.Events
     /// </summary>
     public class EventHub
     {
-        private Dictionary<Type, EventBase> _events = new Dictionary<Type, EventBase>();
+        private Dictionary<Type, AbstractEventBase> _events = new Dictionary<Type, AbstractEventBase>();
 
         /// <summary>
         /// Get an event of the specified type. If the event does not exist, create it.
         /// </summary>
         /// <returns></returns>
-        public T Get<T>() where T : EventBase
+        public T Get<T>() where T : AbstractEventBase, new()
         {
             Type type = typeof(T);
             if (_events.ContainsKey(type))
@@ -25,7 +25,7 @@ namespace Nap.Events
             }
             else
             {
-                T newEvent = (T)Activator.CreateInstance(type);
+                T newEvent = new T();
                 _events.Add(type, newEvent);
                 return newEvent;
             }

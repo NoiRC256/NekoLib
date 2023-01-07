@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Nap;
 using Nap.Events;
 
 namespace Nap.UI
@@ -48,6 +47,7 @@ namespace Nap.UI
                 uiLayer.LayerId = i;
                 RegisterUILayer(uiLayer.LayerId, uiLayer);
             }
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         public void OnRequestOpen(UISignalScreenEvtArgs args)

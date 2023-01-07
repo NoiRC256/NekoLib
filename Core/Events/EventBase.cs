@@ -2,12 +2,22 @@ using System;
 
 namespace Nap.Events
 {
+    public abstract class EventBase : AbstractEventBase
+    {
+        public Action Event { get; set; }
+
+        public void Invoke()
+        {
+            Event?.Invoke();
+        }
+    }
+
     /// <summary>
     /// A wrapper class for <see cref="EventHandler{TEventArgs}"></see> with one event parameter.
     /// Allows extension of custom event types.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class EventBase<T> : EventBase
+    public abstract class EventBase<T> : AbstractEventBase
     {
         public Action<T> Event { get; set; }
 
@@ -22,7 +32,7 @@ namespace Nap.Events
     /// Allows extension of custom event types.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class EventBase<T1, T2> : EventBase
+    public abstract class EventBase<T1, T2> : AbstractEventBase
     {
         public Action<T1, T2> Event { get; set; }
 
@@ -36,7 +46,7 @@ namespace Nap.Events
     /// A non-generic base class for <see cref="EventBase{T}"></see>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class EventBase
+    public abstract class AbstractEventBase
     {
 
     }
