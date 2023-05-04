@@ -10,13 +10,13 @@ namespace NekoLib.Events
     /// </summary>
     public class EventHub
     {
-        private Dictionary<Type, AbstractEventBase> _events = new Dictionary<Type, AbstractEventBase>();
+        private Dictionary<Type, IEvent> _events = new Dictionary<Type, IEvent>();
 
         /// <summary>
         /// Get an event of the specified type. If the event does not exist, create it.
         /// </summary>
         /// <returns></returns>
-        public T Get<T>() where T : AbstractEventBase, new()
+        public T Get<T>() where T : IEvent, new()
         {
             Type type = typeof(T);
             if (_events.ContainsKey(type))

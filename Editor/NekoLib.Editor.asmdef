@@ -1,0 +1,18 @@
+{
+    "name": "NekoLib.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7bbd5793d4564474988d26b4e600279c"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
