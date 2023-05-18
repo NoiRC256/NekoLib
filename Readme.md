@@ -16,8 +16,8 @@ NekoLib is a collection of useful tools and features that can help maintain a cl
 - Physics - Helper methods for Unity physics
 
 #### Kits
-Built-in implementations for some aspects of game logic
-- UI - Lightweight MVC UI framework (WIP).
+Out-of-the-box implementations for some aspects of game logic
+- UI - Lightweight MVC UI framework (Work In Progress).
 - Movement - Robust character movement solution with predictive damping.
 - Stats - Non-destructive value modification system.
 - Playables - Custom behavior system for Unity PlayableGraph.
@@ -36,7 +36,7 @@ Place the source files into your project's assets folder.
 # Quick Start
 
 ## Setting up a framework for your project
-The `Modules` and `Pooling` features can be useful as base services of a project.
+The `Modules` and `Pooling` features can be useful for building a project framework.
 
 ### Modules
 `Modules` is a global service locator. It can be used to centrally initialize and manage stateful objects you want global access to. 
@@ -55,25 +55,24 @@ In the initial scene, we have a singleton MonoBehaviour `GameEngine` which will 
     [DefaultExecutionOrder(-1)]
     public class GameEngine : MonoBehaviour
     {
-        [SerializeField] private GameObject _uiRoot;
+        [SerializeField] private UIRoot _uiRoot;
         [SerializeField] private Rewired.InputManager _inputManagerPrefab;
 
         protected override void Awake()
         {
             base.Awake();
 
-            // Register your own services below.
-
-            // Registers an existing gameobject to give it global access.
+            // Registers an existing MonoBehaviour to make it globally accessible.
             Modules.Register<UIRoot>(_uiRoot);
 
-            // Registers a MonoBehaviour from a manually instantiated prefab.
+            // Registers a MonoBehaviour from a manually instantiated instance.
             Modules.RegisterModule<Rewired.InputManager>(
                 GameObject.Instantiate(_inputManagerPrefab)
                 );
    
-            // Registers a MonoBehaviour.
-            // Automatically instantiates a new gameobject for it.
+            // Registers a MonoBehaviour to an interface.
+            // Because no instance is provided,
+            // automatically instantiates a new gameobject for it.
             Modules.RegisterModule<IObjectPoolManager, ObjectPoolManager>();
 
             // Registers self.
@@ -88,7 +87,13 @@ In the initial scene, we have a singleton MonoBehaviour `GameEngine` which will 
 `ObjectPoolManager` centrally manages object pools.
 
 #### Getting a Pool
-You can obtain a pool for a specific type by `GetPool<T>()`, or obtain a pool for a specific prefab by `GetPool<T>(T obj) where T : Component`. Both methods will return a `IObjectPool<T>`. 
+You can obtain a pool automatically by the following ways:
+
+- `GetPool<T>()` to get or create a pool for a specific type by. 
+
+- `GetPool<T>(T obj)` to get or create a pool for a specific prefab by where `T` is a Unity component.  
+
+Both methods will return a `IObjectPool<T>`.
 
 #### Creating a Pool
 When you try to get a pool for the first time, the corresponding pool will be automatically created and registered. 
