@@ -1,25 +1,24 @@
 # Overview
 
-NekoLib encapsulates a range of features that can be leveraged to optimize the game development workflow. 
-
-NekoLib is not a framework, and does not enforce specific ways of doing things. It's a toolbox of useful features that can help maintain a clean and flexible architecture, so that you can implement and extend logic with relative ease.
-
-#### Base Services
-- GameEntry - Global service locator.
-- ObjectPoolManager - Object pooling service with capacity optimization.
+NekoLib is a collection of useful tools and features that can help maintain a clean and flexible architecture. Implement and extend logic with relative ease.
 
 #### Core
-- Pooling - Generic object pooling with easy integration.
-- IoC Container - Auto dependency injection by attributes.
-- Global Events - Strongly-typed custom events.
+
+- Modules - Global service locator.
+- Pooling - Generic object pooling with dynamic optimization.
+- Events - Strongly-typed custom events.
+- Scriptable Events - Scriptable object events for easy conguration.
 - FSM - Extendable code-based finite statemachine.
-- Singleton - MonoBehaviour singleton that provides coroutine support for manager classes.
+- IoC Container - Auto dependency injection by attributes.
+- Singleton - MonoBehaviour singletons with Coroutine support.
 - Data Structures - Utility data classes that encapsulate commonly-used features.
+- Math - Helper methods for 3D maths
+- Physics - Helper methods for Unity physics
 
 #### Kits
-NekoLib also provides integrated implementations covering some aspects of game logic.
-- UI - Loosely-MVC UI framework (WIP).
-- Movement - Robust rigidbody movement solution.
+Out-of-the-box implementations for some aspects of game logic
+- UI - Lightweight MVC UI framework (Work In Progress).
+- Movement - Robust character movement solution with predictive damping.
 - Stats - Non-destructive value modification system.
 - Playables - Custom behavior system for Unity PlayableGraph.
 
@@ -36,44 +35,48 @@ Place the source files into your project's assets folder.
 
 # Quick Start
 
-## Base Services Usage
+## Setting up a framework for your project
+The `Modules` and `Pooling` features can be useful for building a project framework.
 
-### GameEntry
-`GameEntry` is a global service locator. You can create your own entry point and register game services using `GameEntry.RegisterModule<T>(module)`. Then, you can 
-Use `GameEntry.GetModule<T>()` to access registered services.
+### Modules
+`Modules` is a global service locator. It can be used to centrally initialize and manage stateful objects you want global access to. 
+
+The term "module" here is the equivalent of "service", but used exclusively to differentiate with network-related remote services a project might use.
+
+You could register anything as a module using `Modules.Register<T>(obj)` at the start. This enables you to use `Modules.Get<T>()` from anywhere in the project to access the registered object.
 
 <details>
   <summary>Example</summary>
 
-Use a MonoBehaviour singleton to register global modules that will be used in the project. `MonoSingleton` instances are `DontDestroyOnLoad` by default.
+In the initial scene, we have a singleton MonoBehaviour `GameEngine` which will register global objects that will be used in the project.
 
 ```Csharp  
-    // Entry point of the game. Initializes global game modules.
+    // Main game manager singleton.
     [DefaultExecutionOrder(-1)]
-    public class GameEngine : MonoSingleton<GameEngine>
+    public class GameEngine : MonoBehaviour
     {
-        [SerializeField] private GameConfig _gameConfig;
+        [SerializeField] private UIRoot _uiRoot;
+        [SerializeField] private Rewired.InputManager _inputManagerPrefab;
 
         protected override void Awake()
         {
             base.Awake();
 
-            // Global object pool manager.
-            GameEntry.RegisterModule<IObjectPoolManager, ObjectPoolManager>();
+            // Registers an existing MonoBehaviour to make it globally accessible.
+            Modules.Register<UIRoot>(_uiRoot);
 
-            // Register your own services below.
+            // Registers a MonoBehaviour from a manually instantiated instance.
+            Modules.RegisterModule<Rewired.InputManager>(
+                GameObject.Instantiate(_inputManagerPrefab)
+                );
+   
+            // Registers a MonoBehaviour to an interface.
+            // Because no instance is provided,
+            // automatically instantiates a new gameobject for it.
+            Modules.RegisterModule<IObjectPoolManager, ObjectPoolManager>();
 
-            // Input.
-            GameEntry.RegisterModule<Rewired.InputManager>(GameObject.Instantiate(_gameConfig.InputManager));
-
-            // Game settings.
-            GameEntry.RegisterModule<Settings>(new Settings(_gameConfig.DefaultSettingsProfile, _gameConfig.SettingsConfig));
-
-            // UI.
-            GameEntry.RegisterModule<UIFrame>(_gameConfig.UIConfig.CreateUIFrame());
-
-            // Camera.
-            GameEntry.RegisterModule<Camera>(GameObject.Instantiate(_gameConfig.MainCamera));
+            // Registers self.
+            Modules.Register<GameEngine>(this);
         }
 
     }
@@ -81,33 +84,49 @@ Use a MonoBehaviour singleton to register global modules that will be used in th
 </details>
 
 ### Object Pool Manager
+`ObjectPoolManager` centrally manages object pools.
 
-`ObjectPoolManager` keeps track of all registered object pools. You can obtain a pool for a specific type by `GetPool<T>()`, or obtain a pool for a specific prefab by `GetPool<T>(T obj) where T : Component`. Both methods will return a `IObjectPool<T>`. 
+#### Getting a Pool
+You can obtain a pool automatically by the following ways:
 
-The corresponding pool will be automatically registered upon the first `GetPool` call. You can also manually register your pools by `RegisterPool<T>()` and `RegisterPool<T>(T obj)`.
+- `GetPool<T>()` to get or create a pool for a specific type by. 
 
-With a `IObjectPool pool`, use `pool.Get()` to obtain a pooled object, and `pool.Release(T obj)` to return an object back into the pool.
+- `GetPool<T>(T obj)` to get or create a pool for a specific prefab by where `T` is a Unity component.  
+
+Both methods will return a `IObjectPool<T>`.
+
+#### Creating a Pool
+When you try to get a pool for the first time, the corresponding pool will be automatically created and registered. 
+
+Alternatively, you could manually create and register pools by `RegisterPool<T>()` and `RegisterPool<T>(T obj)`.
+
+#### Using a Pool
+With a `IObjectPool pool`
+
+- `pool.Get()` to obtain a pooled object
+
+- `pool.Release(T obj)` to return an object back into the pool.
 
 <details>
   <summary>Example</summary>
 
-A default object pool manager service has been registered by `GameEntry.RegisterModule<IObjectPoolManager, ObjectPoolManager>()`.
+A global object pool manager has already been created by `Modules.RegisterModule<IObjectPoolManager, ObjectPoolManager>()`.
 
-Here `BulletFactory` class uses an object pool manager to create pooled bullet instances. `Bullet` is a MonoBehaviour script attached to the root gameobject of each bullet prefab.
+Here, `BulletFactory` class uses an object pool manager to create pooled bullet instances from a prefab.
+
+`Bullet` is a MonoBehaviour component attached to the root gameobject of a bullet prefab.
 
 ```Csharp
     public static class BulletFactory
     {
-        private static IObjectPoolManager _objectPoolManager;
+        ObjectPoolManager PoolManager => Modules.GetModule<IObjectPoolManager>();
 
-        public static Bullet Instantiate(Bullet prefab, BulletCfg cfg, Vector3 origin, Vector3 direction,
-            LayerMask layerMask = default, IBattleActor source = null)
+        public static Bullet Instantiate(Bullet prefab, BulletConfig cfg,
+        Vector3 origin, Vector3 direction, LayerMask layerMask = default)
         {
-            _objectPoolManager = _objectPoolManager ?? GameEntry.GetModule<IObjectPoolManager>();
-
-            IObjectPool<Bullet> pool = _objectPoolManager.GetPool(prefab);
+            IObjectPool<Bullet> pool = PoolManager.GetPool(prefab);
             Bullet bullet = pool.Get();
-            bullet.Init(cfg, origin, direction, layerMask, source, pool);
+            bullet.Init(cfg, origin, direction, layerMask, pool);
             return bullet;
         }
     }

@@ -1,0 +1,17 @@
+{
+    "name": "NekoLib.Modules",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7bbd5793d4564474988d26b4e600279c",
+        "GUID:f06555f75b070af458a003d92f9efb00"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

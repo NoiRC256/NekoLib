@@ -7,7 +7,7 @@
     {
         private static readonly EventHub _eventHub = new EventHub();
 
-        public static T Get<T>() where T : AbstractEventBase, new()
+        public static T Get<T>() where T : IEvent, new()
         {
             return _eventHub.Get<T>();
         }

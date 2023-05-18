@@ -1,26 +1,12 @@
 #if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
-using static UnityEngine.GridBrushBase;
 
-namespace Nap
+namespace NekoLib
 {
     [CustomEditor(typeof(ObjectPoolManager))]
     public class ObjectPoolManagerEditor : Editor
     {
         private bool _showPool;
-
-        private void OnEnable()
-        {
-            
-        }
-
-        private void OnDisable()
-        {
-            
-        }
 
         public override void OnInspectorGUI()
         {

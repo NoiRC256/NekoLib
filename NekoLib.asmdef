@@ -1,0 +1,17 @@
+{
+    "name": "NekoLib",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7bbd5793d4564474988d26b4e600279c",
+        "GUID:a7df8d48c8ccec84ab764e49dbc0cd39"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

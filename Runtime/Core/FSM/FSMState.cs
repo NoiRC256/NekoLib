@@ -99,7 +99,7 @@ namespace NekoLib.FSM
         /// <param name="owner"></param>
         public virtual void OnEnter(T owner)
         {
-            if (_enterAction != null) _enterAction(owner);
+            _enterAction?.Invoke(owner);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace NekoLib.FSM
         /// <param name="owner"></param>
         public virtual void OnUpdate(T owner)
         {
-            if (_updateAction != null) _updateAction(owner);
+            _updateAction?.Invoke(owner);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace NekoLib.FSM
         /// <param name="owner"></param>
         public virtual void OnExit(T owner)
         {
-            if (_exitAction != null) _exitAction(owner);
+            _exitAction?.Invoke(owner);
         }
     }
 }
