@@ -18,7 +18,7 @@ namespace NekoLib.Pool
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        IObjectPool<T> RegisterPool<T>() where T : class, new();
+        IObjectPool<T> CreatePool<T>() where T : class, new();
 
         /// <summary>
         /// Create and register a new pool of the specified component.
@@ -26,7 +26,7 @@ namespace NekoLib.Pool
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        IObjectPool<T> RegisterPool<T>(T obj) where T : Component;
+        IObjectPool<T> CreatePool<T>(T obj) where T : Component;
         #endregion
 
         #region Get

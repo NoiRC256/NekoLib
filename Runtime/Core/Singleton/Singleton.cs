@@ -1,15 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using NekoLib.Events;
 using UnityEngine;
 
-namespace NekoLib
+namespace NekoLib.Singletons
 {
     public class Singleton<T> where T : Singleton<T>, new()
     {
         private static T _instance;
+
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ReloadDomain()
+        {
+            _instance = null;
+        }
+#endif
 
         public static T Instance {
             get {

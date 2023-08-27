@@ -14,23 +14,29 @@ namespace NekoLib.Pool
         /// Capacity of the pool.
         /// </summary>
         int Capacity { get; }
+        bool AutoExpand { get; }
+        int MinCapacity { get; }
+        int MaxCapacity { get; }
         /// <summary>
-        /// Number of objects in the pool.
+        /// Pool size. The number of objects in the pool.
         /// </summary>
         int Count { get; }
         /// <summary>
-        /// Last time an object is spawned.
+        /// Last time the pool is used.
         /// </summary>
         float LastUseTime { get; }
         /// <summary>
-        /// Time at which the pool will be automatically cleared.
+        /// If the pool has not been used for this amount of time,
+        /// the pool size will be optimized.
+        /// </summary>
+        float ExpireInterval { get; }
+        /// <summary>
+        /// At this time, the pool size will be optimized.
         /// </summary>
         float ExpireTime { get; }
         /// <summary>
-        /// Time until the pool is automatically cleared.
+        /// When the pool size has changed.
         /// </summary>
-        float ExpireInterval { get; }
-
         public event Action<int> CountChanged;
 
         /// <summary>
@@ -42,7 +48,7 @@ namespace NekoLib.Pool
         /// Unspawn an object back into the pool.
         /// </summary>
         /// <param name="obj"></param>
-        bool Release(object obj);
+        bool Push(object obj);
     }
 
     /// <summary>
@@ -61,6 +67,6 @@ namespace NekoLib.Pool
         /// Unspawn an object of the pooled type back into the pool.
         /// </summary>
         /// <param name="obj"></param>
-        bool Release(T obj);
+        bool Push(T obj);
     }
 }
