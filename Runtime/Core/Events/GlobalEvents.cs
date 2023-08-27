@@ -1,5 +1,4 @@
-﻿using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NekoLib.Events
 {
@@ -11,8 +10,9 @@ namespace NekoLib.Events
         private static EventHub _eventHub = new EventHub();
 
 # if UNITY_EDITOR
+        // Manual domain reload for editor enter play mode options.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ReloadDomain()
+        static void InitializeOnEnterPlayMode()
         {
             _eventHub = new EventHub();
         }

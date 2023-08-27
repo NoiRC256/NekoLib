@@ -1,4 +1,3 @@
-using NekoLib.Events;
 using UnityEngine;
 
 namespace NekoLib.Singletons
@@ -8,8 +7,9 @@ namespace NekoLib.Singletons
         private static T _instance;
 
 #if UNITY_EDITOR
+        // Manual domain reload for editor enter play mode options.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ReloadDomain()
+        static void InitializeOnEnterPlayMode()
         {
             _instance = null;
         }

@@ -1,22 +1,24 @@
 namespace NekoLib.Stats
 {
     /// <summary>
-    /// Data class that represents a value modifier for stats.
+    /// Modifies the value of a stat.
     /// </summary>
-    public class StatModifier : IStatModifier
+    [System.Serializable]
+    public class StatModifier
     {
-
-        public Stat Stat { get; }
-        public object Source { get; }
-        public StatModifierType Type { get; }
-        public int Order { get; }
-
-        public StatModifier(float value, object source, StatModifierType type = StatModifierType.Flat, int order = 0)
+        public enum ModifierEffectType
         {
-            Stat = new Stat(value);
-            Source = source;
-            Type = type;
-            Order = order;
+            Add,
+            Mult,
+        }
+
+        public float Value;
+        public ModifierEffectType EffectType;
+
+        public StatModifier(float value, ModifierEffectType effectType)
+        {
+            Value = value;
+            EffectType = effectType;
         }
     }
 }
