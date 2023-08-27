@@ -6,47 +6,43 @@ namespace NekoLib.Pool
 {
     public abstract class ObjectPoolBase<T> : IObjectPool<T> where T : class
     {
-        protected const int kDefaultCapacity = 30;
-        protected const float kDefaultExpireTime = 30f;
+        protected const int kDefaultCapacity = 10;
+        protected const int kDefaultMaxCapacity = 30;
+        protected const float kDefaultExpireInterval = 30f;
 
         public int Capacity { get; set; }
+        public bool AutoExpand { get; set; }
+        public int MinCapacity { get; set; }
+        public int MaxCapacity { get; set; }
         public int Count => _objectStack.Count;
         public float LastUseTime { get; set; }
         public float ExpireInterval { get; set; }
         public float ExpireTime => LastUseTime + ExpireInterval;
-
         public event Action<int> CountChanged;
 
         private Stack<T> _objectStack = new Stack<T>();
 
-        protected ObjectPoolBase(int capacity = kDefaultCapacity, float expireTime = kDefaultExpireTime)
+        protected ObjectPoolBase(int capacity = kDefaultCapacity, bool autoExpand = true, int maxCapacity = kDefaultMaxCapacity,
+            float expireInterval = kDefaultExpireInterval)
         {
             Capacity = capacity;
-            ExpireInterval = expireTime;
+            AutoExpand = autoExpand;
+            MinCapacity = Capacity;
+            MaxCapacity = MaxCapacity;
+            LastUseTime = Time.time;
+            ExpireInterval = expireInterval;
         }
 
         public virtual void Clear()
         {
-            while(_objectStack.Count > 0)
+            while (_objectStack.Count > 0)
             {
                 T obj = _objectStack.Pop();
                 if (obj != null) Destroy(obj);
             }
             _objectStack.Clear();
             LastUseTime = Time.time;
-            CountChanged?.Invoke(_objectStack.Count);
-        }
-
-        public virtual void Clear(int count) 
-        {
-            int cleared = 0;
-            while (_objectStack.Count > 0)
-            {
-                T obj = _objectStack.Pop();
-                if (obj != null) Destroy(obj);
-                cleared += 1;
-                if (cleared >= count) break;
-            }
+            Capacity = MinCapacity;
             CountChanged?.Invoke(_objectStack.Count);
         }
 
@@ -70,13 +66,13 @@ namespace NekoLib.Pool
         /// </summary>
         /// <param name="obj"></param>
         /// <returns>True if succeeded</returns>
-        public bool Release(object obj)
+        public bool Push(object obj)
         {
             if (obj == null || obj.GetType() != typeof(T))
             {
                 return false;
             }
-            return Release((T)obj);
+            return Push((T)obj);
         }
 
         /// <summary>
@@ -84,11 +80,16 @@ namespace NekoLib.Pool
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public virtual bool Release(T obj)
+        public virtual bool Push(T obj)
         {
             if (_objectStack.Count >= Capacity)
             {
-                Destroy(obj);
+                if (AutoExpand && Capacity < MaxCapacity)
+                {
+                    Capacity += 1;
+                    AddToPool(obj);
+                }
+                else Destroy(obj);
             }
             else
             {

@@ -1,21 +1,23 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using NekoLib.Pool;
 
-namespace NekoLib
+namespace NekoLib.Pool
 {
     /// <summary>
     /// Manager and service locator for pools.
     /// </summary>
-    public sealed partial class ObjectPoolManager : MonoBehaviour, IObjectPoolManager
+    public class ObjectPoolManager : MonoBehaviour, IObjectPoolManager
     {
-        private const int kDefaultCapacity = 30;
-        private const float kDefaultExpireTime = 30f;
+        private const int kDefaultCapacity = 10;
+        private const int kDefaultMaxCapacity = 30;
+        private const float kDefaultExpireInterval = 30f;
         private const float kDefaultTickInterval = 15f;
 
         [SerializeField] private int _defaultCapacity = kDefaultCapacity;
-        [SerializeField] private float _defaultExpireTime = kDefaultExpireTime;
+        [SerializeField] private bool _defaultAutoExpand = true;
+        [SerializeField] private int _defaultMaxCapacity = kDefaultMaxCapacity;
+        [SerializeField] private float _defaultExpireInterval = kDefaultExpireInterval;
         [SerializeField] private float _tickInterval = kDefaultTickInterval;
 
         private List<IObjectPool> _pools = new List<IObjectPool>();
@@ -59,34 +61,40 @@ namespace NekoLib
         }
         #endregion
 
-        #region Register
-        public IObjectPool<T> RegisterPool<T>() where T : class, new()
+        #region Create Pool
+        public IObjectPool<T> CreatePool<T>() where T : class, new()
         {
-            ReferencePool<T> pool = new ReferencePool<T>(_defaultCapacity) 
-            { ExpireInterval = _defaultExpireTime };
+            ReferencePool<T> pool = new ReferencePool<T>(capacity: _defaultCapacity,
+                autoExpand: _defaultAutoExpand,
+                maxCapacity: kDefaultMaxCapacity,
+                expireInterval: kDefaultExpireInterval)
+            { ExpireInterval = _defaultExpireInterval };
             _referencePools.Add(typeof(T), pool);
             _pools.Add(pool);
             return pool;
         }
 
-        public IObjectPool<T> RegisterPool<T>(T obj) where T : Component
+        public IObjectPool<T> CreatePool<T>(T obj) where T : Component
         {
             if (obj == null)
                 throw new Exception("Object is invalid: null object.");
 
-            IObjectPool<T> pool = new ComponentPool<T>(obj, _defaultCapacity) 
-            { ExpireInterval = _defaultExpireTime };
+            IObjectPool<T> pool = new ComponentPool<T>(obj, capacity: _defaultCapacity,
+                autoExpand: _defaultAutoExpand,
+                maxCapacity: kDefaultMaxCapacity,
+                expireInterval: kDefaultExpireInterval)
+            { ExpireInterval = _defaultExpireInterval };
             _prefabPools.Add(obj, pool);
             _pools.Add(pool);
             return pool;
         }
         #endregion
 
-        #region Get
+        #region Get Pool
         public IObjectPool<T> GetPool<T>() where T : class, new()
         {
             if (HasPool<T>()) return (IObjectPool<T>)_referencePools[typeof(T)];
-            else return RegisterPool<T>();
+            else return CreatePool<T>();
         }
 
         public IObjectPool<T> GetPool<T>(T obj) where T : Component
@@ -95,11 +103,11 @@ namespace NekoLib
                 throw new Exception("Object is invalid: null object.");
 
             if (HasPool<T>(obj)) return (IObjectPool<T>)_prefabPools[obj];
-            else return RegisterPool<T>(obj);
+            else return CreatePool<T>(obj);
         }
         #endregion
 
-        #region Check
+        #region Check Pool
         public bool HasPool<T>() where T : class, new()
         {
             return _referencePools.ContainsKey(typeof(T));

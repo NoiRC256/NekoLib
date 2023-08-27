@@ -4,14 +4,14 @@ namespace NekoLib.Events
 {
     public abstract class EventBase : IEvent
     {
-        public event Action Event;
+        public event Action Action;
 
         public void Invoke()
         {
-            Event?.Invoke();
+            Action?.Invoke();
         }
 
-        public void Clear() => Event = null;
+        public void Clear() => Action = null;
     }
 
     /// <summary>
@@ -21,14 +21,14 @@ namespace NekoLib.Events
     /// <typeparam name="T"></typeparam>
     public abstract class EventBase<T> : IEvent
     {
-        public event Action<T> Event;
+        public event Action<T> Action;
 
         public void Invoke(T args)
         {
-            Event?.Invoke(args);
+            Action?.Invoke(args);
         }
 
-        public void Clear() => Event = null;
+        public void Clear() => Action = null;
     }
 
     /// <summary>
@@ -38,14 +38,14 @@ namespace NekoLib.Events
     /// <typeparam name="T"></typeparam>
     public abstract class EventBase<T1, T2> : IEvent
     {
-        public event Action<T1, T2> Event;
+        public event Action<T1, T2> Action;
 
         public void Invoke(T1 args1, T2 args2)
         {
-            Event?.Invoke(args1, args2);
+            Action?.Invoke(args1, args2);
         }
 
-        public void Clear() => Event = null;
+        public void Clear() => Action = null;
     }
 
     public interface IEvent
