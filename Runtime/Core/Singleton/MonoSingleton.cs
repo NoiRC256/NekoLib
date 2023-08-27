@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace NekoLib
+namespace NekoLib.Singletons
 {
     public abstract class MonoSingleton : MonoBehaviour
     {
