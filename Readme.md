@@ -1,11 +1,10 @@
 # Overview
 
-NekoLib is a collection of useful utilities for gameplay programming.
+NekoLib provides some useful features you might see in game frameworks.
 
 ### Key Features
 
-- Pick and choose which features to use.
-- Strong separation of editor and runtime code
+- Easy integration - pick and choose the features you want to use
 - Does not rely on any 3rd party assets
 
 #### Core
@@ -69,7 +68,7 @@ event.Action += OnLevelSucceed;
 
 </details>
 
-<details><summary><b>ScriptableEvents</b> - Scriptable objects that invoke events</summary>
+<details><summary><b>ScriptableEvents</b> - Scriptable objects that act as events</summary>
 
 ```csharp
 public class MyEventListener: MonoBehaviour {
@@ -194,6 +193,40 @@ public class AvatarStatGroup : StatGroup<AvatarStatType>
         RegisterStat(ShieldMax, StatType.ShieldMax, avatarData.ShieldMax);
         RegisterResourceStat(Shield, StatType.Shield, avatarData.Shield, ShieldMax);
     }
+}
+```
+
+```csharp
+Stat speed = new Stat(6);
+// speed.Value == 6
+
+StatModifier speedModifier = new StatModifier(3, ModifierEffectType.Add);
+
+speed.AddModifier(speedModifier);
+// speed.Value == 9
+
+speed.RemoveModifier(speedModifier);
+// speed.Value == 6
+```
+
+```csharp
+void OnEnable() {
+    speed.ValueChanged += OnSpeedValueChanged;
+    speed.StatChanged += OnSpeedStatChanged;
+}
+
+void OnDisable(){
+    speed.ValueChanged -= OnSpeedValueChanged;
+    speed.StatChanged -= OnSpeedStatChanged;
+}
+
+
+void OnSpeedValueChanged(float value) {
+    ...
+}
+
+void OnSpeedStatChanged(Stat stat) {
+    ...
 }
 ```
 
