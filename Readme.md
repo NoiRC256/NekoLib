@@ -4,8 +4,9 @@ NekoLib provides some useful features you might see in game frameworks.
 
 ### Key Features
 
-- Easy integration - pick and choose the features you want to use
-- Does not rely on any 3rd party assets
+- Modular - Pick and choose the features you want to use
+- Lightweight - GC-friendly solutions with low performance impact
+- Easy integration - Does not rely on any 3rd party assets
 
 #### Core
 
@@ -160,8 +161,7 @@ var myService = GameServices.Get<IMyServiceInterface>();
 
 ```csharp
 [System.Serializable]
-public class AvatarStatGroup : StatGroup<AvatarStatType>
-{
+public class AvatarStatGroup : StatGroup<StatType>{
     public enum StatType {
         MoveSpeed,
         KineticResistance,
@@ -197,7 +197,8 @@ public class AvatarStatGroup : StatGroup<AvatarStatType>
 ```
 
 ```csharp
-Stat speed = new Stat(6);
+Stat speed;
+avatarStatGroup.TryGetStat(StatType.Speed, out speed);
 // speed.Value == 6
 
 StatModifier speedModifier = new StatModifier(3, ModifierEffectType.Add);
