@@ -10,7 +10,7 @@ NekoLib provides some useful features you might see in game frameworks.
 
 #### Core
 
-<details><summary><b>ReactiveProps</b> - Data classes with property binding</summary>
+<details><summary><b>ReactiveProps</b> - Subscribe to value change events on data classes</summary>
 
 ```csharp
 public class UIScoreController : MonoBehaviour {
@@ -60,16 +60,16 @@ public class Bullet : MonoBehaviour {
 
 </details>
 
-<details><summary><b>Events</b> - Strongly-typed custom events</summary>
+<details><summary><b>Events</b> - Typed custom events</summary>
 
 ```csharp
 var event = GlobalEvents.Get<LevelSucceedEvt>();
-event.Action += OnLevelSucceed;
+event.Action += HandleLevelSucceed;
 ```
 
 </details>
 
-<details><summary><b>ScriptableEvents</b> - Scriptable objects that act as events</summary>
+<details><summary><b>ScriptableEvents</b> - Use Scriptable Objects as events</summary>
 
 ```csharp
 public class MyEventListener: MonoBehaviour {
@@ -91,7 +91,7 @@ public class MyEventListener: MonoBehaviour {
 
 </details>
 
-<details><summary><b>FSM</b> - Extendable code-based finite state machines</summary>
+<details><summary><b>FSM</b> - Extendable code-based finite state machine</summary>
 
 ```csharp
 fsm = new FSMBase<Player>(player);
@@ -154,84 +154,6 @@ var myService = GameServices.Get<IMyServiceInterface>();
 **Math** - Utility methods for 3D maths
 
 **Physics** - Utility methods for Unity physics
-
-#### Modules
-
-<details><summary><b>Stats</b> - Reactive gameplay attributes system.</summary>
-
-```csharp
-[System.Serializable]
-public class AvatarStatGroup : StatGroup<StatType>{
-    public enum StatType {
-        MoveSpeed,
-        KineticResistance,
-        BlastResistance,
-        MeleeResistance,
-        HealthMax,
-        Health,
-        ShieldMax,
-        Shield,
-    }
-
-    public Stat MoveSpeed = new Stat();
-    public Stat KineticResistance = new Stat();
-    public Stat BlastResistance = new Stat();
-    public Stat MeleeResistance = new Stat();
-    public Stat HealthMax = new Stat();
-    public Stat Health = new Stat();
-    public Stat ShieldMax = new Stat();
-    public Stat Shield = new Stat();
-
-    public void Init(AvatarData avatarData) {
-        base.Init();
-        RegisterLowerBoundedStat(MoveSpeed, StatType.MoveSpeed, avatarData.MoveSpeed);
-        RegisterStat(KineticResistance, StatType.KineticResistance, avatarData.KineticResistance);
-        RegisterStat(BlastResistance, StatType.BlastResistance, avatarData.BlastResistance);
-        RegisterStat(MeleeResistance, StatType.MeleeResistance, avatarData.MeleeResistance);
-        RegisterStat(HealthMax, StatType.HealthMax, avatarData.HealthMax);
-        RegisterResourceStat(Health, StatType.Health, avatarData.Health, HealthMax);
-        RegisterStat(ShieldMax, StatType.ShieldMax, avatarData.ShieldMax);
-        RegisterResourceStat(Shield, StatType.Shield, avatarData.Shield, ShieldMax);
-    }
-}
-```
-
-```csharp
-Stat speed;
-avatarStatGroup.TryGetStat(StatType.Speed, out speed);
-// speed.Value == 6
-
-StatModifier speedModifier = new StatModifier(3, ModifierEffectType.Add);
-
-speed.AddModifier(speedModifier);
-// speed.Value == 9
-
-speed.RemoveModifier(speedModifier);
-// speed.Value == 6
-```
-
-```csharp
-void OnEnable() {
-    speed.ValueChanged += OnSpeedValueChanged;
-    speed.StatChanged += OnSpeedStatChanged;
-}
-
-void OnDisable(){
-    speed.ValueChanged -= OnSpeedValueChanged;
-    speed.StatChanged -= OnSpeedStatChanged;
-}
-
-
-void OnSpeedValueChanged(float value) {
-    ...
-}
-
-void OnSpeedStatChanged(Stat stat) {
-    ...
-}
-```
-
-</details>
 
 ### Installation
 
