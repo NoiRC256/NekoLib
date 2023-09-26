@@ -10,7 +10,7 @@ namespace NekoLib
         /// <summary>
         /// <script src="https://gist.github.com/vildninja/fefddf7390646a113ba7ee2a5da0525e.js"></script>
         /// </summary>
-        [MenuItem("NekoLib Editor/Remove All Missing Scripts In Selected")]
+        [MenuItem("NekoLib Utils/Remove All Missing Scripts In Selected")]
         private static void RemoveAllMissingScripts()
         {
             // EditorUtility.CollectDeepHierarchy does not include inactive children

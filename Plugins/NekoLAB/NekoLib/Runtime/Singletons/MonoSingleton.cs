@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace NekoLib.Singletons
 {
-    public abstract class MonoSingleton : MonoBehaviour
+    public interface ISingleton
     {
-        public virtual void Init() { }
+        void Init();
     }
 
     /// <summary>
@@ -12,7 +12,7 @@ namespace NekoLib.Singletons
     /// Duplicate instances in the scene will be destroyed.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class MonoSingleton<T> : MonoSingleton where T : MonoSingleton<T>
+    public class MonoSingleton<T> : MonoBehaviour, ISingleton where T : MonoSingleton<T>
     {
         private static T _instance;
 
@@ -29,9 +29,11 @@ namespace NekoLib.Singletons
                 GameObject.Destroy(this.gameObject);
                 return;
             }
+
+            Init();
         }
 
-        public override void Init()
+        public void Init()
         {
             Instance = (T)this;
         }

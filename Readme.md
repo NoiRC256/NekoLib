@@ -166,6 +166,6 @@ var myService = GameServices.Get<IMyServiceInterface>();
 
 #### Installing the old way
 
-Place the source files into your project's assets folder.
+Place the `Plugins` folder into your project's `Assets/` folder.
 
 </details>
