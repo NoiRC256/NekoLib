@@ -157,12 +157,8 @@ var myService = GameServices.Get<IMyServiceInterface>();
 
 ### Installation
 
-<details>
-  <summary>Instructions</summary>
+#### Installing via Unity Package
 
-#### Installing via Git URL
-
-(soon)
 
 #### Installing the old way
 
