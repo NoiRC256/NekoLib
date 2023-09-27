@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NekoLib
+namespace NekoLab
 {
     public static class EditorUtils
     {

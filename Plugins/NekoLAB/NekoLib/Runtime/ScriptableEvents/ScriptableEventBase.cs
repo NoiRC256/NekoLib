@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NekoLib.ScriptableEvents
+namespace NekoLab.ScriptableEvents
 {
     public abstract class ScriptableEventBase : ScriptableObject, IScriptableEvent
     {

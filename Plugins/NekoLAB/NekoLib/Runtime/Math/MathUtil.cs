@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NekoLib.NekoMath
+namespace NekoLab.NekoMath
 {
     public static class MathUtil
     {

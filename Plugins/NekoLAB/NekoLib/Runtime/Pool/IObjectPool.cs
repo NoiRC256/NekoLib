@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NekoLib.Pool
+namespace NekoLab.Pool
 {
     /// <summary>
     /// Base interface for object pool.

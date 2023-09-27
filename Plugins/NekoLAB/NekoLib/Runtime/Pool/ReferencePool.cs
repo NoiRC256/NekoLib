@@ -1,4 +1,4 @@
-﻿namespace NekoLib.Pool
+﻿namespace NekoLab.Pool
 {
     /// <summary>
     /// Type-safe object pool.

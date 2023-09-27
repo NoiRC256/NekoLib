@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NekoLib.Singletons
+namespace NekoLab.Singletons
 {
     public interface ISingleton
     {

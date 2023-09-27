@@ -1,4 +1,4 @@
-﻿namespace NekoLib.FSM
+﻿namespace NekoLab.FSM
 {
     public class NotCondition<T> : FSMCondition<T>
     {

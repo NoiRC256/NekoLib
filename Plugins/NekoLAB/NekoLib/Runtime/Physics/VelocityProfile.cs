@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NekoLib.NekoPhysics  
+namespace NekoLab.NekoPhysics  
 {
     [System.Serializable]
     public class VelocityProfile

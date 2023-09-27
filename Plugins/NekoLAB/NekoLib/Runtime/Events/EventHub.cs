@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NekoLib.Events
+namespace NekoLab.Events
 {
     /// <summary>
     /// Service locator for event instances.

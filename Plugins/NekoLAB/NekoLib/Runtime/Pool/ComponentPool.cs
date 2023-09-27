@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NekoLib.Pool
+namespace NekoLab.Pool
 {
     /// <summary>
     /// Type-safe component pool. Can be used to pool instances of a prefab.

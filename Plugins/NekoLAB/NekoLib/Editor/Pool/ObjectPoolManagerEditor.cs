@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace NekoLib.Pool
+namespace NekoLab.Pool
 {
     [CustomEditor(typeof(ObjectPoolManager))]
     public class ObjectPoolManagerEditor : Editor

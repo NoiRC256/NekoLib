@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NekoLib.ServiceLocator
+namespace NekoLab.ServiceLocator
 {
     /// <summary>
     /// Service locator.

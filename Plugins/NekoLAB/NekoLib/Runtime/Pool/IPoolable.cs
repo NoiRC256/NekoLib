@@ -1,4 +1,4 @@
-﻿namespace NekoLib.Pool
+﻿namespace NekoLab.Pool
 {
     /// <summary>
     /// Interface for poolable instances.

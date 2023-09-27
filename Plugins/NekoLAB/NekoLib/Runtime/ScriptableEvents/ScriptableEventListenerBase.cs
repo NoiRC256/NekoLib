@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace NekoLib.ScriptableEvents
+namespace NekoLab.ScriptableEvents
 {
     public abstract class ScriptableEventListenerBase : MonoBehaviour
     {

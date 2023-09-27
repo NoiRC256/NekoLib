@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NekoLib.Events
+namespace NekoLab.Events
 {
     /// <summary>
     /// Service locator for global events.

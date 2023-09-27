@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NekoLib.ReactiveProps
+namespace NekoLab.ReactiveProps
 {
     /// <summary>
     /// <see cref="UnityEngine.ScriptableObject"/> that acts as a property wrapper.

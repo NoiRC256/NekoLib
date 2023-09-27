@@ -1,6 +1,6 @@
 using System;
 
-namespace NekoLib.ReactiveProps
+namespace NekoLab.ReactiveProps
 {
     /// <summary>
     /// Interface for property that holds a value and exposes an event for value change.

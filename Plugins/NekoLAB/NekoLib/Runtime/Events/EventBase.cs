@@ -1,6 +1,6 @@
 using System;
 
-namespace NekoLib.Events
+namespace NekoLab.Events
 {
     public abstract class EventBase : IEvent
     {

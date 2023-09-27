@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NekoLib.Pool
+namespace NekoLab.Pool
 {
     /// <summary>
     /// Interface for object pool manager that manages pools for <see cref="IPoolable"/> instances.

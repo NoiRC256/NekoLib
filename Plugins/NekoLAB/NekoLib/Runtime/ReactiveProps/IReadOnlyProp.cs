@@ -1,4 +1,4 @@
-namespace NekoLib.ReactiveProps
+namespace NekoLab.ReactiveProps
 {
     /// <summary>
     /// Interface for a readonly property wrapper.

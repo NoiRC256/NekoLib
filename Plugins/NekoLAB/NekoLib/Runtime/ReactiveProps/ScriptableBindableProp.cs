@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace NekoLib.ReactiveProps
+namespace NekoLab.ReactiveProps
 {
     /// <summary>
     /// <see cref="UnityEngine.ScriptableObject"/> that acts as a property wrapper and exposes an event for value change.

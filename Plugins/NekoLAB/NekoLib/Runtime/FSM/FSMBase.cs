@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NekoLib.FSM
+namespace NekoLab.FSM
 {
     // Adapted from Iris Fenrir
     /// <summary>

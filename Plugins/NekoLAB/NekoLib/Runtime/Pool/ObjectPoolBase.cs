@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NekoLib.Pool
+namespace NekoLab.Pool
 {
     public abstract class ObjectPoolBase<T> : IObjectPool<T> where T : class
     {

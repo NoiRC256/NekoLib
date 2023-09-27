@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace NekoLib.ReactiveProps
+namespace NekoLab.ReactiveProps
 {
     /// <summary>
     /// Data class that holds a value and exposes events for value change.
